@@ -11,3 +11,4 @@ data/processed/gia_ngay_dai.csv
 data/processed/rf_ngay.csv
 data/processed/lan_chay_*.txt
 data/processed/ro_100_ma_khong_bom.csv
+!data/raw/ngay_huy_niem_yet.csv
