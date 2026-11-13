@@ -4,11 +4,11 @@ Tiểu luận cuối kỳ môn Khoa học dữ liệu và Phân tích kinh doanh
 
 ## Dữ liệu
 
-- **Giá cổ phiếu và VN-Index:** CafeF, bộ tệp Upto cho MetaStock/AmiBroker (giá đã điều chỉnh, giá chưa điều chỉnh, chỉ số). Tệp giá chốt ngày 31/12/2025, tệp chỉ số chốt ngày 11/11/2026, tải ngày ....
+- **Giá cổ phiếu và VN-Index:** CafeF, bộ tệp Upto cho MetaStock/AmiBroker (giá đã điều chỉnh, giá chưa điều chỉnh, chỉ số). Tệp giá chốt ngày 31/12/2025, tệp chỉ số chốt ngày 11/11/2026, tải ngày 11/11/2026
 - **Rổ cổ phiếu:** 100 mã thuộc HOSE ngày 31/12/2019 có giá trị giao dịch bình quân năm 2019 cao nhất và giao dịch ít nhất 80% số phiên năm 2019. Các mã bị hủy niêm yết về sau vẫn được giữ để tránh thiên lệch sống sót.
 - **Sàn niêm yết ngày 31/12/2019 của các mã phải tra tay:** `data/raw/kiem_tra_san_2019.csv` (có cột nguồn).
 - **Sự kiện quyền CafeF bỏ sót, điều chỉnh bổ sung:** `data/raw/dieu_chinh_bo_sung.csv` (có cột nguồn).
-- **Lãi suất phi rủi ro:** lợi suất thứ cấp trái phiếu Chính phủ Việt Nam kỳ hạn 10 năm theo ngày, Investing.com, tải ngày 13/11/2026 Bảng đối chiếu với lãi suất trúng thầu cuối quý: `phu_luc/doi_chieu_rf_trung_thau_vs_thu_cap.csv`.
+- **Lãi suất phi rủi ro:** lợi suất thứ cấp trái phiếu Chính phủ Việt Nam kỳ hạn 10 năm theo ngày, Investing.com, tải ngày 13/11/2026. Bảng đối chiếu với lãi suất trúng thầu cuối quý: `phu_luc/doi_chieu_rf_trung_thau_vs_thu_cap.csv`.
 
 Kho không kèm các tệp gốc của CafeF và Investing.com, cũng không kèm các tệp đã xử lý chứa nguyên chuỗi giá hoặc chuỗi lợi suất (`gia_dong_cua.csv`, `gia_ngay_dai.csv`, `rf_ngay.csv`). Làm theo mục dưới đây sẽ tạo lại đủ các tệp đó.
 
