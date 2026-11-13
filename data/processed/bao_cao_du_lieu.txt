@@ -1,0 +1,31 @@
+Ngày chạy: 13/11/2026 12:02
+  cafef_dieu_chinh: tệp chốt ngày 31/12/2025
+  cafef_dieu_chinh: bỏ 79 dòng trùng (mã, ngày)
+  cafef_chua_dieu_chinh: tệp chốt ngày 31/12/2025
+  cafef_chua_dieu_chinh: bỏ 79 dòng trùng (mã, ngày)
+  cafef_index: tệp chốt ngày 11/11/2026
+Lưu ý: tệp Index chốt 11/11/2026, khác ngày chốt của tệp giá (31/12/2025). Chấp nhận được vì chỉ số không bị điều chỉnh, nhưng nên dùng cùng ngày.
+Đã điều chỉnh: 1849 mã {'HNX': 379, 'HOSE': 479, 'UPCOM': 1108}, từ 28/07/2000 đến 31/12/2025
+Chưa điều chỉnh: 1849 mã {'HNX': 379, 'HOSE': 479, 'UPCOM': 1108}, từ 28/07/2000 đến 31/12/2025
+VN-Index: 1747 phiên từ 02/01/2019 đến 31/12/2025
+Năm 2019 có 250 phiên HOSE; 140 ứng viên; 61 mã có dấu hiệu cần xét sàn, trong đó tự xác định được từ bước giá: {'chưa': 25, 'NGOAI_HOSE': 20, 'HOSE': 16}.
+  Còn 25 mã phải kiểm tra tay sàn niêm yết.
+  Phân loại theo bước giá năm 2019: {'giong_hose': 79, 'khong_xet_duoc': 22, 'chi_tron_100': 20, 'khong_ro': 19}
+Nguồn xác định sàn 31/12/2019 của 140 ứng viên: {'có giá lẻ bước 10/50 đồng trong 20 phiên cuối 2019': 94, 'kiểm tra tay': 25, 'giá 2019 luôn tròn 100 đồng': 20, 'sàn hiện tại, không có dấu hiệu khác': 1}
+Rổ cuối cùng: 100 mã. Loại vì không ở HOSE cuối 2019: PVS, BSR, VCS, TNG, VEA, VGI, QNS, NDN, VTP, MPC, CEO, ACV, NVB, SHS, VC3, PVI, VGT, HUT, L14, PVB, C69, MBG, TAR.
+Mã trong rổ ngừng có dữ liệu trước cuối kỳ (giữ lại, không loại): ROS (11/08/2022), FLC (08/09/2022), ITA (25/09/2024), GTN (07/03/2022), TTB (06/07/2023), TNA (13/09/2024)
+Bổ sung điều chỉnh MWG 30/08/2021: hệ số 0.6667 cho 1782 phiên trước đó (nguồn: Báo Pháp luật: cổ tức bằng cổ phiếu 50% (tỷ lệ 2:1) - GDKHQ 30/08/2021 - tra 12/11/2026)
+Bổ sung điều chỉnh PVD 29/07/2019: hệ số 0.9091 cho 3144 phiên trước đó (nguồn: Vietstock: cổ tức bằng cổ phiếu 10% - GDKHQ 29/07/2019 - tra 12/11/2026)
+Bổ sung điều chỉnh TNA 20/08/2020: hệ số 0.8696 cho 3504 phiên trước đó (nguồn: VSD: phát hành cổ phiếu trả cổ tức 2019 - ĐKCC 21/08/2020 / ĐTCK 11/08/2020: tỷ lệ 15% - tra 12/11/2026)
+Bổ sung điều chỉnh TPB 13/05/2025: hệ số 0.9322 cho 1759 phiên trước đó (nguồn: DNSE: cổ tức tiền mặt 10% (1.000 đ) - GDKHQ 13/05/2025 - tra 12/11/2026)
+Bỏ 1 ngày có giá nhưng không có phiên VN-Index (ví dụ 17/05/2024)
+Số lần giá đã điều chỉnh nhảy bậc so với giá gốc: 645 ở 87 mã; hệ số từ 0,95 trở lên (cỡ cổ tức tiền mặt): 343
+Ngày giá gốc giảm quá 7.5% (thường là ngày GDKHQ): 285; trong đó giá điều chỉnh vẫn giảm mạnh: 70, gồm 48 lần sau nhiều phiên không giao dịch (bình thường) và 22 lần giữa hai phiên liền nhau (cần xem lại)
+  Mã có ngày cần xem lại: FTM (14), HNG (4), HBC (2), IJC (1), SCR (1)
+Tỷ lệ ô thiếu trung bình: 2.94%; mã thiếu nhiều nhất: GTN (54.7%)
+Bỏ dòng lợi suất rơi vào cuối tuần: 03/10/2021
+Lợi suất TPCP 10 năm (Investing): 1818 dòng ngày thường; 70 ngày Investing có số nhưng HOSE nghỉ (bỏ); 0 phiên HOSE không có số, lấy số phiên trước
+Lợi suất 10 năm thấp nhất 2.038% (15/12/2021), cao nhất 5.209% (03/11/2022)
+Lợi suất 10 năm bình quân năm theo phiên HOSE (%): 2019: 4.37, 2020: 2.85, 2021: 2.20, 2022: 3.64, 2023: 3.24, 2024: 2.77, 2025: 3.49
+Đã ghi data/processed/rf_ngay.csv (rf theo từng phiên)
+Bảng dài: 171,411 dòng (101 mã)

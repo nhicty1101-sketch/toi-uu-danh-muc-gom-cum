@@ -1,0 +1,13 @@
+.env
+.venv/
+__pycache__/
+.idea/
+.DS_Store
+data/raw/*
+!data/raw/kiem_tra_san_2019.csv
+!data/raw/dieu_chinh_bo_sung.csv
+data/processed/gia_dong_cua.csv
+data/processed/gia_ngay_dai.csv
+data/processed/rf_ngay.csv
+data/processed/lan_chay_*.txt
+data/processed/ro_100_ma_khong_bom.csv
