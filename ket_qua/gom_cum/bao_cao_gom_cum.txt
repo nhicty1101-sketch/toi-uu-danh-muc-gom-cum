@@ -1,0 +1,47 @@
+Đọc giá từ MySQL (bảng gia_ngay): 1747 phiên
+1747 phiên, 100 mã, 20 kỳ tái cân bằng
+
+=== PHẦN 1. ĐẶC TRƯNG VÀ HAI TRỤC ===
+Số mã được gom cụm mỗi kỳ: 88–100
+Loại vì không có giá ở ngày quyết định: kỳ 12: HPX; kỳ 15: VNG; kỳ 19: TDM
+Kỳ 1: tương quan bình quân giữa ba biến rủi ro 0,54, Cronbach's alpha 0,78; chỉ số rủi ro tương quan với độ biến động 0,87, beta 0,74, sụt giảm tối đa 0,86; với trục lợi suất -0,10
+Qua 20 kỳ: Cronbach's alpha trung vị 0,82 (0,66–0,92); tương quan giữa hai trục trung vị -0,08 (-0,50–0,46)
+
+=== PHẦN 2. CHỌN SỐ CỤM k (KỲ 1) ===
+        sse  silhouette
+k                      
+1   200.000         NaN
+2   131.047       0.307
+3    75.289       0.391
+4    53.024       0.415
+5    40.522       0.404
+6    32.911       0.383
+7    27.982       0.387
+8    23.760       0.384
+9    20.791       0.385
+10   18.033       0.403
+Silhouette cao nhất trong khoảng 3–8: k = 4 (0,415). Điểm khuỷu của đường SSE: k = 4. Silhouette cao nhất nếu tính cả k = 2: k = 4.
+=> CHỌN k = 4, giữ cố định cho 20 kỳ (quy tắc: Silhouette cao nhất trong 3–8; Elbow dùng để đối chiếu).
+
+=== PHẦN 3. GOM CỤM 20 KỲ ===
+Silhouette với k = 4 qua các kỳ: trung vị 0,399 (0,362–0,447)
+k có Silhouette cao nhất từng kỳ (chỉ để kiểm tra): k=3: 2 kỳ, k=4: 5 kỳ, k=5: 3 kỳ, k=6: 4 kỳ, k=7: 3 kỳ, k=8: 3 kỳ
+Silhouette mất đi khi giữ k = 4 so với k tốt nhất từng kỳ: trung vị 0,013, lớn nhất 0,068
+Cỡ cụm nhỏ nhất qua các kỳ: 10 mã; số kỳ có cụm dưới 2 mã: 0
+Số kỳ có ít nhất một cụm mà mọi mã đều có lợi suất năm hóa âm: 6 (kỳ 1, kỳ 9, kỳ 12, kỳ 13, kỳ 14, kỳ 15)
+Độ ổn định thành viên giữa hai kỳ liền nhau (ARI): trung vị 0,47 (0,32–0,75)
+Mức trùng giữa K-Means hai trục và K-Means bốn đặc trưng (ARI): trung vị 0,63
+Gom cụm phân cấp theo tương quan (liên kết Ward, 4 nhóm): nhóm nhỏ nhất 6–17 mã, nhóm lớn nhất 29–49 mã qua các kỳ
+Mức trùng giữa K-Means hai trục và gom cụm phân cấp theo tương quan (ARI): trung vị 0,13 (-0,01–0,26)
+
+Các cụm ở kỳ 1 (cửa sổ 02/01/2019–05/01/2021), đánh số theo rủi ro tăng dần:
+  Cụm 1 (31 mã): lợi suất năm hóa trung vị 20,4%, độ biến động 27,1%, beta 0,64, sụt giảm tối đa 36,5%: BMP BWE CII CRE CTI DBD DHC DHG FPT GEX HNG HPX KDH MSN NBB NLG NT2 NVL PDR PPC REE SBT SHI TDM TPB VCB VIC VJC VNG VNM VPI
+  Cụm 2 (19 mã): lợi suất năm hóa trung vị 55,5%, độ biến động 41,3%, beta 1,04, sụt giảm tối đa 49,2%: ASM CTG CVT D2D DGW DIG GTN HDC HDG HPG HSG IJC ITA KBC LCG LHG OGC PHR TCM
+  Cụm 3 (40 mã): lợi suất năm hóa trung vị 15,2%, độ biến động 34,5%, beta 1,11, sụt giảm tối đa 53,4%: AAA ANV AST BID DLG DPG DPM DRC DXG FLC GAS GMD HAG HBC HCM HDB IDI KSB MBB MSH MWG NTL PLX PNJ POW PTB PVD PVT SAB SCR SSI STB TCB TCH TDH TNA VHC VHM VPB VRE
+  Cụm 4 (10 mã): lợi suất năm hóa trung vị -24,5%, độ biến động 48,5%, beta 0,89, sụt giảm tối đa 81,0%: BVH CTD DAH FTM HVH LDG ROS TTB VRC YEG
+
+Các nhóm theo tương quan ở kỳ 1 (liên kết Ward):
+  Nhóm 1 (7 mã; thuộc cụm K-Means 1: 6, 4: 1): CTI DAH DBD HPX NVL PDR VPI
+  Nhóm 2 (19 mã; thuộc cụm K-Means 1: 11, 3: 6, 4: 2): AST CII CRE CTD DHC DHG GEX MSN NBB SAB SBT TCH TNA VHM VIC VJC VNG VRE YEG
+  Nhóm 3 (42 mã; thuộc cụm K-Means 1: 10, 2: 7, 3: 24, 4: 1): AAA ANV BID BMP BVH CTG CVT DGW DPM DRC FPT GAS GMD HBC HCM HDB HDG HPG HSG KDH MBB MSH MWG NLG NT2 PLX PNJ POW PPC PTB PVD PVT REE SSI STB TCB TCM TPB VCB VHC VNM VPB
+  Nhóm 4 (32 mã; thuộc cụm K-Means 1: 4, 2: 12, 3: 10, 4: 6): ASM BWE D2D DIG DLG DPG DXG FLC FTM GTN HAG HDC HNG HVH IDI IJC ITA KBC KSB LCG LDG LHG NTL OGC PHR ROS SCR SHI TDH TDM TTB VRC

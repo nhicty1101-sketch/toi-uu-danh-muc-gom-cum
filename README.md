@@ -28,7 +28,7 @@ Kho không kèm các tệp gốc của CafeF và Investing.com, cũng không kè
    - đặt `NAP_MYSQL = True` trong `01_lay_du_lieu_cafef.py` rồi chạy lại để nạp bảng giá;
    - chạy `.venv/bin/python 03_nap_ro_mysql.py` để nạp bảng rổ.
 6. Chạy `.venv/bin/python 04_kham_pha_du_lieu.py`; bảng và hình ghi vào ket_qua/eda/.
-
+7. Chạy `.venv/bin/python 05_gom_cum.py`; kết quả ghi vào ket_qua/gom_cum/.
 ## Các tệp trong kho
 
 | Tệp | Nội dung |
@@ -42,3 +42,6 @@ Kho không kèm các tệp gốc của CafeF và Investing.com, cũng không kè
 | `phu_luc/` | Bảng đối chiếu lãi suất trúng thầu và lợi suất thứ cấp |
 | `04_kham_pha_du_lieu.py` | Khám phá dữ liệu: chất lượng dữ liệu, thống kê mô tả, diễn biến thị trường, đặc trưng gom cụm, tương quan giữa các mã |
 | `ket_qua/eda/` | Bảng và hình của bước khám phá dữ liệu |
+| `cong_cu.py` | Hàm dùng chung: lịch tái cân bằng, điều kiện chọn mã, đặc trưng, hai trục, K-Means |
+| `05_gom_cum.py` | Gom cụm: chọn k, K-Means hai trục qua 20 kỳ, so sánh với K-Means bốn đặc trưng và gom cụm phân cấp theo tương quan |
+| `ket_qua/gom_cum/` | Bảng và hình của bước gom cụm |
