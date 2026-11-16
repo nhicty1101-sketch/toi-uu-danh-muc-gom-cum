@@ -1,0 +1,43 @@
+Đọc giá từ MySQL (bảng gia_ngay): 1747 phiên
+1747 phiên, 100 mã, 20 kỳ; k = 4 (từ 05_gom_cum.py); phí 0,2% mỗi chiều
+Kỳ 1: quyết định bằng dữ liệu đến 05/01/2021, giao dịch ở giá đóng cửa 06/01/2021; lợi suất danh mục tính đến 31/12/2025
+
+=== PHẦN 1. TỶ TRỌNG MỖI KỲ ===
+S2 1/N: số mã nắm giữ 88–100; tỷ trọng lớn nhất trung vị 1,1%; HHI trung vị 0,011; tỷ trọng ở mã đứng giá trên 15% số phiên: trung vị 4,3%
+S3 Markowitz: số mã nắm giữ 15–28; tỷ trọng lớn nhất trung vị 10,0%; HHI trung vị 0,075; tỷ trọng ở mã đứng giá trên 15% số phiên: trung vị 22,4%
+S4 K-Means + Markowitz: số mã nắm giữ 5–8; tỷ trọng lớn nhất trung vị 25,0%; HHI trung vị 0,210; tỷ trọng ở mã đứng giá trên 15% số phiên: trung vị 0,0%
+S5 HRP: số mã nắm giữ 88–100; tỷ trọng lớn nhất trung vị 6,8%; HHI trung vị 0,022; tỷ trọng ở mã đứng giá trên 15% số phiên: trung vị 14,3%
+  S3 kỳ 1, 5 mã lớn nhất: VPI 10,0% (đứng giá 17%); NVL 10,0% (đứng giá 14%); HPX 10,0% (đứng giá 25%); DBD 8,7% (đứng giá 17%); NBB 7,5% (đứng giá 15%)
+  S3 kỳ 5, 5 mã lớn nhất: DBD 10,0% (đứng giá 18%); NVL 10,0% (đứng giá 13%); VPI 10,0% (đứng giá 12%); DHG 10,0% (đứng giá 10%); VJC 9,4% (đứng giá 12%)
+  S3 kỳ 9, 5 mã lớn nhất: VJC 10,0% (đứng giá 9%); DBD 10,0% (đứng giá 14%); DHG 10,0% (đứng giá 10%); SAB 10,0% (đứng giá 8%); VPI 9,2% (đứng giá 7%)
+  S3 kỳ 13, 5 mã lớn nhất: SHI 10,0% (đứng giá 24%); DBD 10,0% (đứng giá 14%); VPI 10,0% (đứng giá 10%); VJC 9,6% (đứng giá 7%); VCB 9,2% (đứng giá 8%)
+  S3 kỳ 17, 5 mã lớn nhất: SHI 10,0% (đứng giá 39%); TDM 10,0% (đứng giá 23%); VCB 10,0% (đứng giá 7%); VPI 10,0% (đứng giá 11%); AST 8,7% (đứng giá 14%)
+  S3 kỳ 20, 5 mã lớn nhất: TDM 10,0% (đứng giá 24%); VPI 10,0% (đứng giá 10%); SHI 10,0% (đứng giá 38%); DHG 10,0% (đứng giá 11%); VCB 9,7% (đứng giá 10%)
+  S3, tỷ trọng bình quân 20 kỳ cao nhất: VPI 9,9%, DBD 9,6%, DHG 8,6%, VJC 7,1%, SHI 7,0%, SAB 6,3%, AST 5,5%, VCB 5,2%, VNM 4,7%, NVL 4,2%
+S4: 18 lượt cụm có lợi suất năm hóa trung vị âm vẫn góp 2 mã, ở các kỳ 1, 2, 3, 9, 10, 11, 12, 13, 14, 15, 16, 17
+
+=== PHẦN 2. MÔ PHỎNG ===
+1243 phiên từ 06/01/2021 đến 31/12/2025
+
+=== PHẦN 3. KẾT QUẢ CẢ GIAI ĐOẠN ===
+                       loi_suat_tich_luy loi_suat_nam_hoa do_bien_dong_nam_hoa sharpe sortino sut_giam_toi_da calmar vong_quay_hai_chieu_bq tong_phi
+S1 VN-Index                        56,1%             9,4%                19,9%   0,40    0,53          -40,3%   0,23                                
+S2 1/N                             83,7%            13,1%                22,7%   0,52    0,68          -53,6%   0,24                  14,5%     0,8%
+S3 Markowitz                       51,7%             8,8%                13,2%   0,48    0,65          -29,0%   0,30                  27,6%     1,2%
+S4 K-Means + Markowitz            137,6%            19,2%                21,7%   0,78    1,09          -56,4%   0,34                 143,4%     5,7%
+S5 HRP                             79,9%            12,6%                17,1%   0,60    0,79          -42,7%   0,30                  25,1%     1,2%
+Ghi chú: vòng quay hai chiều bình quân không tính lần mua đầu tiên; S1 không tính phí; VN-Index là chỉ số giá, các chiến lược còn lại dùng giá đã điều chỉnh (gồm cổ tức).
+
+Lợi suất theo năm:
+     S1 VN-Index  S2 1/N S3 Markowitz S4 K-Means + Markowitz  S5 HRP
+nam                                                                 
+2021       31,1%   82,7%        59,2%                 141,5%   69,1%
+2022      -32,8%  -40,8%       -24,4%                 -49,2%  -32,5%
+2023       12,2%   26,9%         7,5%                   6,5%   18,1%
+2024       12,1%    7,7%        12,1%                  42,8%   14,2%
+2025       40,9%   24,2%         4,5%                  27,3%   16,9%
+
+Giai đoạn con (lợi suất năm hóa | Sharpe | sụt giảm tối đa):
+  Kỳ 1–4 (06/01/2021–07/01/2022, VN-Index 33,7%): S1 33,7% | 1,39 | -14,3%; S2 93,2% | 2,89 | -14,6%; S3 62,1% | 2,82 | -10,8%; S4 153,1% | 3,83 | -13,8%; S5 76,2% | 2,98 | -10,7%
+  Kỳ 5–8 (10/01/2022–11/01/2023, VN-Index -30,9%): S1 -30,9% | -1,50 | -40,2%; S2 -41,6% | -1,72 | -53,6%; S3 -23,0% | -1,91 | -29,0%; S4 -50,5% | -2,93 | -52,7%; S5 -32,8% | -1,78 | -42,7%
+  Kỳ 9–20 (12/01/2023–31/12/2025, VN-Index 69,0%): S1 19,6% | 0,94 | -18,1%; S2 18,1% | 0,81 | -21,9%; S3 6,9% | 0,38 | -12,4%; S4 24,4% | 1,07 | -14,6%; S5 15,3% | 0,88 | -15,1%

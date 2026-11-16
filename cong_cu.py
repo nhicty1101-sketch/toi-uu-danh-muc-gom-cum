@@ -165,3 +165,77 @@ def kmeans_co_thu_tu(X, k, cot_rui_ro):
     nhan = pd.Series([thu_tu[c] for c in km.labels_], index=X.index, name="cum")
     tam.index = [thu_tu[c] for c in tam.index]
     return nhan, tam.sort_index(), km.inertia_
+
+
+# ---------------------------------------------------------------------------------------------
+# Phần dùng cho kiểm tra ngoài mẫu (06) và kiểm định độ vững
+# ---------------------------------------------------------------------------------------------
+PHI_GIAO_DICH = 0.002        # 0,2% trên giá trị mua hoặc bán
+TRAN_S3, TRAN_S4 = 0.10, 0.25
+SO_MA_MOI_CUM = 2            # S4 chọn 2 mã Sharpe cao nhất mỗi cụm
+
+
+def doc_rf(lich, ghi=print):
+    """Lãi suất phi rủi ro theo phiên (data/processed/rf_ngay.csv do script 01 tạo), khớp với lịch giá."""
+    tep = PROC / "rf_ngay.csv"
+    if not tep.exists():
+        ghi("CẢNH BÁO: không có data/processed/rf_ngay.csv; dùng rf = 0.")
+        return pd.Series(0.0, index=lich, name="rf_ngay")
+    rf = pd.read_csv(tep, index_col=0, parse_dates=True)["rf_ngay"]
+    return rf.reindex(lich).ffill().fillna(0.0)
+
+
+def phuong_sai_nho_nhat(S, tran):
+    """Tỷ trọng Markowitz phương sai nhỏ nhất: min w'Sw, tổng w = 1, 0 <= w <= tran (không bán khống).
+    S là ma trận hiệp phương sai (numpy). Giải bằng SLSQP của scipy, xuất phát từ tỷ trọng đều."""
+    from scipy.optimize import minimize
+    n = S.shape[0]
+    tran = max(tran, 1.0 / n)            # đủ chỗ cho tổng bằng 1 khi số mã ít
+    kq = minimize(lambda w: w @ S @ w, np.full(n, 1.0 / n), jac=lambda w: 2 * S @ w, method="SLSQP",
+                  bounds=[(0.0, tran)] * n,
+                  constraints=[{"type": "eq", "fun": lambda w: w.sum() - 1.0, "jac": lambda w: np.ones(n)}],
+                  options={"maxiter": 2000, "ftol": 1e-12})
+    if not kq.success:
+        raise RuntimeError(f"Không giải được bài toán phương sai nhỏ nhất: {kq.message}")
+    w = np.clip(kq.x, 0.0, None)
+    return w / w.sum()
+
+
+def hrp(S, C):
+    """Hierarchical Risk Parity (López de Prado, 2016): gom cụm phân cấp liên kết đơn trên khoảng cách
+    sqrt(0,5(1 - rho)), sắp xếp lại theo cây, rồi chia đôi đệ quy theo phương sai nghịch đảo."""
+    from scipy.cluster.hierarchy import leaves_list, linkage
+    from scipy.spatial.distance import squareform
+    d = np.sqrt(np.clip(0.5 * (1 - C), 0.0, 1.0))
+    np.fill_diagonal(d, 0.0)
+    thu_tu = list(leaves_list(linkage(squareform(d, checks=False), method="single")))
+
+    def phuong_sai_cum(chi_so):
+        s = S[np.ix_(chi_so, chi_so)]
+        w = 1.0 / np.diag(s)
+        w = w / w.sum()
+        return w @ s @ w
+
+    w = np.ones(len(thu_tu))
+    vi_tri = {m: i for i, m in enumerate(thu_tu)}      # chỉ số gốc -> vị trí trong thứ tự cây
+    nhom = [thu_tu]
+    while nhom:
+        nhom = [g[a:b] for g in nhom for a, b in ((0, len(g) // 2), (len(g) // 2, len(g))) if len(g) > 1]
+        for i in range(0, len(nhom), 2):
+            g1, g2 = nhom[i], nhom[i + 1]
+            v1, v2 = phuong_sai_cum(g1), phuong_sai_cum(g2)
+            a = 1 - v1 / (v1 + v2)
+            for m in g1:
+                w[vi_tri[m]] *= a
+            for m in g2:
+                w[vi_tri[m]] *= 1 - a
+    kq = np.empty(len(thu_tu))
+    for m in thu_tu:
+        kq[m] = w[vi_tri[m]]
+    return kq / kq.sum()
+
+
+def sharpe_cua_so(rr, rf_cs):
+    """Sharpe năm hóa của từng mã trong cửa sổ: trung bình lợi suất vượt rf chia độ lệch chuẩn."""
+    vuot = rr.sub(rf_cs, axis=0)
+    return vuot.mean() / rr.std() * np.sqrt(PHIEN_NAM)
