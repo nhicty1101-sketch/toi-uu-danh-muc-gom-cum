@@ -46,3 +46,13 @@
 - Số mã theo năm 2019–2025: 100, 100, 100, 100, 97, 96, 94.
 - Bảng rổ nạp bằng 03_nap_ro_mysql.py vì Import Wizard của Workbench trên Mac lỗi với tệp CSV (cả bản có và không có BOM).
 - Cột san_hien_tai lấy theo tệp HSX của CafeF nên vẫn ghi HOSE với các mã đã hủy niêm yết (ví dụ ROS); dùng cột ngay_cuoi_co_du_lieu để biết mã dừng giao dịch.
+
+## 16/11/2026: Kiểm tra dữ liệu lần cuối trước khi gom cụm (Bước 4a)
+
+- Script `04_kham_pha_du_lieu.py` đọc bảng `gia_ngay` từ MySQL. Đối chiếu với `gia_dong_cua.csv`: trùng lịch phiên, trùng ô trống, giá chênh nhiều nhất 0,0005.
+- Rà các phiên có lợi suất vượt ±7,5% theo cả hai chiều (Bước 3 mới chỉ xét chiều giảm):
+  - CVT 10/08/2021; ITA, TNA, SCR 19/01/2022; LDG 06/03/2024: giá đóng cửa trong tệp CafeF thấp hơn giá tham chiếu tối thiểu, tính bằng giá phiên sau chia 1,07. Cùng kiểu lỗi với IJC, SCR 05/07/2021. Giữ nguyên vì lỗi chỉ dời lợi suất giữa hai phiên liền nhau.
+  - MWG 24/07/2025: CafeF điều chỉnh khoản cổ tức tiền mặt 1.000 đồng bằng hệ số 0,8989, trong khi hệ số đúng là 0,9858 (giá gốc 70,50 → 69,50). Đã thêm dòng vào `dieu_chinh_bo_sung.csv`. Script 01 nay thay hệ số của CafeF khi lệch hơn 0,5%. Nguồn: VnEconomy, bản tin Pinetree ngày 07/07/2025.
+  - DLG 04/02/2025: lợi suất gộp hai phiên vì dữ liệu thiếu phiên 03/02/2025.
+- Kiểm tra lịch phiên bằng SQL (các ngày thứ Hai đến thứ Sáu không có VN-Index): 77 ngày là ngày nghỉ lễ. Ngày 17/05/2024 thiếu VN-Index (đã biết từ trước). Ngày 03/02/2025 có giao dịch (VN-Index giảm 0,95% còn 1.253,03 điểm) nhưng CafeF không có dữ liệu. Dữ liệu có 1.747 trên 1.749 phiên. Không bù dữ liệu, ghi vào phần hạn chế.
+- Chạy lại script 01 (lan_chay_9) và nạp lại MySQL: 171.411 dòng.

@@ -1,0 +1,118 @@
+MySQL: bỏ 96 dòng giá cổ phiếu ở 1 ngày không có phiên VN-Index (17/05/2024)
+Đọc từ MySQL: 171,411 dòng, 101 mã (gồm VN-Index)
+Nguồn dùng để phân tích: MySQL (bảng gia_ngay)
+Đối chiếu MySQL với gia_dong_cua.csv: lệch lịch phiên 0 ngày; lệch ô trống 0 ô; chênh giá lớn nhất 0,0005 (MySQL lưu 3 chữ số thập phân)
+Bảng giá: 1747 phiên từ 02/01/2019 đến 31/12/2025; 100 mã và VN-Index
+Phiên giao dịch thật không có trong dữ liệu: 17/05/2024, 03/02/2025 (phiên liền sau mang lợi suất gộp hai phiên)
+Mã hủy niêm yết trong rổ: 9 (GTN, FTM, ROS, FLC, TTB, HBC, HNG, TNA, ITA)
+
+=== PHẦN 1. CHẤT LƯỢNG DỮ LIỆU ===
+Lịch tái cân bằng: 20 kỳ. Phiên đầu nắm giữ 06/01/2021 (quyết định dựa trên dữ liệu đến 05/01/2021); 1243 phiên kiểm tra; kỳ cuối có 46 phiên
+Đối chiếu ngày hủy niêm yết với dữ liệu giá:
+  GTN [sap_nhap]: phiên có giá cuối trên HOSE 07/03/2022, phiên có giá kế tiếp không có -> khớp
+  FTM [chuyen_upcom]: phiên có giá cuối trên HOSE 13/05/2022, phiên có giá kế tiếp 26/05/2022 -> khớp
+  ROS [dinh_chi]: phiên có giá cuối trên HOSE 11/08/2022, phiên có giá kế tiếp không có -> khớp
+  FLC [dinh_chi]: phiên có giá cuối trên HOSE 08/09/2022, phiên có giá kế tiếp không có -> khớp
+  TTB [dinh_chi]: phiên có giá cuối trên HOSE 06/07/2023, phiên có giá kế tiếp không có -> khớp
+  HBC [chuyen_upcom]: phiên có giá cuối trên HOSE 05/09/2024, phiên có giá kế tiếp 18/09/2024 -> khớp
+  HNG [chuyen_upcom]: phiên có giá cuối trên HOSE 05/09/2024, phiên có giá kế tiếp 18/09/2024 -> khớp
+  TNA [dinh_chi]: phiên có giá cuối trên HOSE 13/09/2024, phiên có giá kế tiếp không có -> khớp
+  ITA [dinh_chi]: phiên có giá cuối trên HOSE 25/09/2024, phiên có giá kế tiếp không có -> khớp
+Phiên có lợi suất vượt ±7,5%: 143 (tăng 78, giảm 65)
+  sau_khi_roi_HOSE: 126
+  can_xem: 7
+  sau_nhieu_phien_khong_giao_dich: 6
+  gop_hai_phien_do_thieu_phien: 4
+    cần xem: CVT 11/08/2021 8,0% (giá trước 37,95, giá 41,00)
+    cần xem: IJC 06/07/2021 -8,4% (giá trước 16,05, giá 14,71)
+    cần xem: ITA 20/01/2022 8,2% (giá trước 13,95, giá 15,10)
+    cần xem: LDG 07/03/2024 8,4% (giá trước 2,96, giá 3,21)
+    cần xem: SCR 06/07/2021 -7,9% (giá trước 10,55, giá 9,72)
+    cần xem: SCR 20/01/2022 8,1% (giá trước 16,48, giá 17,82)
+    cần xem: TNA 20/01/2022 10,2% (giá trước 14,75, giá 16,25)
+VN-Index: phiên giảm mạnh nhất -6,68% (03/04/2025), tăng mạnh nhất 6,77% (10/04/2025)
+Kỳ 1: 100/100 mã đủ điều kiện
+Số mã đủ điều kiện qua các kỳ: thấp nhất 89, cao nhất 100
+  Kỳ 12 (17/10/2023): đủ điều kiện nhưng không có giá ngày quyết định: HPX
+  Kỳ 15 (23/07/2024): đủ điều kiện nhưng không có giá ngày quyết định: VNG
+  Kỳ 19 (29/07/2025): đủ điều kiện nhưng không có giá ngày quyết định: TDM
+  GTN: được chọn ở kỳ 5 (quyết định 07/01/2022) nhưng giao dịch phiên cuối trên HOSE ngày 07/03/2022, trong kỳ nắm giữ
+  FTM: được chọn ở kỳ 6 (quyết định 14/04/2022) nhưng giao dịch phiên cuối trên HOSE ngày 13/05/2022, trong kỳ nắm giữ
+  ROS: được chọn ở kỳ 7 (quyết định 14/07/2022) nhưng giao dịch phiên cuối trên HOSE ngày 11/08/2022, trong kỳ nắm giữ
+  FLC: được chọn ở kỳ 7 (quyết định 14/07/2022) nhưng giao dịch phiên cuối trên HOSE ngày 08/09/2022, trong kỳ nắm giữ
+  TTB: được chọn ở kỳ 10 (quyết định 17/04/2023) nhưng giao dịch phiên cuối trên HOSE ngày 06/07/2023, trong kỳ nắm giữ
+  HBC: được chọn ở kỳ 15 (quyết định 23/07/2024) nhưng giao dịch phiên cuối trên HOSE ngày 05/09/2024, trong kỳ nắm giữ
+  HNG: được chọn ở kỳ 15 (quyết định 23/07/2024) nhưng giao dịch phiên cuối trên HOSE ngày 05/09/2024, trong kỳ nắm giữ
+  ITA: được chọn ở kỳ 15 (quyết định 23/07/2024) nhưng giao dịch phiên cuối trên HOSE ngày 25/09/2024, trong kỳ nắm giữ
+  TNA: được chọn ở kỳ 15 (quyết định 23/07/2024) nhưng giao dịch phiên cuối trên HOSE ngày 13/09/2024, trong kỳ nắm giữ
+
+=== PHẦN 2. THỐNG KÊ MÔ TẢ LỢI SUẤT THEO PHIÊN ===
+                         VN-Index  100 mã: nhỏ nhất  100 mã: Q1  100 mã: trung vị  100 mã: Q3  100 mã: lớn nhất
+bd_nam_hoa_pt              19.375            21.091      32.530            38.160      44.824            69.508
+do_lech                    -0.938            -0.274      -0.054             0.023       0.121             0.944
+do_lech_chuan_pt            1.221             1.329       2.049             2.404       2.824             4.379
+do_nhon_vuot                5.364            -0.237       0.903             1.746       2.653             7.093
+ln_nam_hoa_pt              11.905           -57.724       9.219            16.826      24.619            43.139
+lon_nhat_pt                 6.766             6.945       6.993             7.000       7.012            27.341
+nho_nhat_pt                -6.677           -25.000      -7.001            -7.000      -6.995            -6.949
+so_phien                 1746.000           791.000    1746.000          1746.000    1746.000          1746.000
+trung_binh_pt               0.047            -0.229       0.037             0.067       0.098             0.171
+trung_vi_pt                 0.136            -0.278       0.000             0.000       0.000             0.140
+ty_le_phien_dung_gia_pt       NaN             4.238       6.811             8.230      10.125            23.711
+Độ lệch âm: 43/100 mã; VN-Index -0,94
+Độ nhọn vượt: trung vị 1,75; VN-Index 5,36 (phân phối chuẩn bằng 0)
+Kiểm định Jarque–Bera bác bỏ phân phối chuẩn ở mức 5%: 93/100 mã; VN-Index p = 0
+Tỷ lệ phiên giá đứng yên cả kỳ: trung vị 8,2%; 10 mã cao nhất: SHI 23,7%, FTM 18,6%, TDM 17,1%, SBT 17,1%, VNG 17,0%, CVT 16,3%, HNG 16,0%, PPC 15,3%, DBD 14,7%, HPX 14,7%
+
+=== PHẦN 3. DIỄN BIẾN THỊ TRƯỜNG ===
+Sụt giảm lớn nhất của VN-Index: -40,3%, từ đỉnh 06/01/2022 (1528,57 điểm) đến đáy 15/11/2022 (911,90 điểm); lấy lại đỉnh ngày 25/07/2025
+      so_phien  vnindex_dau_nam  vnindex_cuoi_nam  loi_suat_vnindex_pt  bien_dong_vnindex_pt  sut_giam_toi_da_trong_nam_pt  loi_suat_bq_deu_100_ma_pt  so_ma_co_gia
+nam                                                                                                                                                                
+2019       250           891.75            960.99                 7.76                 10.87                         -7.20                       5.51           100
+2020       252           966.67           1103.87                14.87                 22.80                        -33.51                      32.08           100
+2021       250          1120.47           1498.28                35.73                 21.08                        -14.26                      79.50           100
+2022       249          1525.58           1007.09               -32.78                 24.94                        -40.34                     -42.98           100
+2023       249          1043.90           1129.93                12.20                 17.00                        -17.45                      26.17            97
+2024       249          1131.72           1266.78                12.11                 13.57                         -8.94                       8.20            96
+2025       248          1269.71           1784.49                40.87                 21.07                        -18.11                      22.18            94
+Ghi chú: lợi suất VN-Index năm 2019 tính từ phiên đầu tiên có dữ liệu; VN-Index là chỉ số giá, không gồm cổ tức, còn bình quân đều 100 mã dùng giá đã điều chỉnh nên gồm cổ tức.
+
+=== PHẦN 4. ĐẶC TRƯNG GOM CỤM ===
+Cửa sổ đầu (02/01/2019–05/01/2021), 100 mã:
+        count   mean    std    min    25%    50%    75%    max  do_lech
+ln_nam  100.0  0.196  0.312 -1.235  0.095  0.209  0.345  0.826   -1.515
+bd_nam  100.0  0.350  0.081  0.113  0.303  0.338  0.414  0.553    0.170
+beta    100.0  0.933  0.329 -0.069  0.760  1.003  1.186  1.566   -0.800
+sgtd    100.0  0.496  0.163  0.056  0.410  0.491  0.591  0.951    0.303
+8 mã biến động thấp nhất ở cửa sổ đầu (độ biến động; beta; tỷ lệ phiên giá đứng yên): VPI 11,3%, 0,12, 16,5%; NVL 18,3%, 0,25, 13,8%; KDH 22,7%, 0,63, 19,1%; VJC 23,2%, 0,63, 13,3%; NLG 23,7%, 0,69, 9,9%; VNG 23,7%, 0,42, 24,1%; DHG 24,4%, 0,36, 11,5%; NT2 24,6%, 0,63, 13,1%
+Tương quan giữa độ biến động và tỷ lệ phiên giá đứng yên ở cửa sổ đầu: -0,34; giữa beta và tỷ lệ phiên giá đứng yên: -0,69
+Ngoại lệ IQR – Lợi suất năm hóa: 8 (ROS -1,23, HSG 0,83, FTM -1,00, DGW 0,80, HDC 0,74, IJC 0,77, TTB -0,49, YEG -0,67)
+Ngoại lệ IQR – Độ biến động năm hóa: 1 (VPI 0,11)
+Ngoại lệ IQR – Beta với VN-Index: 2 (VPI 0,12, HPX -0,07)
+Ngoại lệ IQR – Sụt giảm tối đa: 5 (ROS 0,94, FTM 0,95, VPI 0,06, HPX 0,14, TTB 0,91)
+Tương quan Pearson giữa các đặc trưng (cửa sổ đầu):
+        ln_nam  bd_nam  beta  sgtd
+ln_nam    1.00   -0.16  0.17 -0.54
+bd_nam   -0.16    1.00  0.42  0.76
+beta      0.17    0.42  1.00  0.44
+sgtd     -0.54    0.76  0.44  1.00
+Tương quan Spearman:
+        ln_nam  bd_nam  beta  sgtd
+ln_nam    1.00    0.05  0.22 -0.37
+bd_nam    0.05    1.00  0.42  0.71
+beta      0.22    0.42  1.00  0.43
+sgtd     -0.37    0.71  0.43  1.00
+PCA trên đặc trưng đã chuẩn hóa z-score, tỷ lệ phương sai giải thích: PC1 55,2%, PC2 30,2%, PC3 12,0%, PC4 2,6%
+Tương quan Pearson giữa các đặc trưng qua 20 kỳ (trung vị; thấp nhất – cao nhất):
+  Độ biến động năm hóa – Sụt giảm tối đa: 0,76 (0,57 – 0,87)
+  Độ biến động năm hóa – Beta với VN-Index: 0,63 (0,39 – 0,85)
+  Beta với VN-Index – Sụt giảm tối đa: 0,47 (0,04 – 0,71)
+  Lợi suất năm hóa – Độ biến động năm hóa: 0,08 (-0,41 – 0,52)
+  Lợi suất năm hóa – Beta với VN-Index: 0,14 (-0,31 – 0,40)
+  Lợi suất năm hóa – Sụt giảm tối đa: -0,45 (-0,70 – 0,03)
+  PC1 giải thích: trung vị 57,0% (50,1% – 73,3%)
+
+=== PHẦN 5. TƯƠNG QUAN GIỮA CÁC MÃ ===
+Cửa sổ đầu, 4950 cặp mã: tương quan trung bình 0,26, trung vị 0,27, Q1 0,17, Q3 0,35, thấp nhất -0,13, cao nhất 0,82, cặp âm 2,4%
+Tương quan của từng mã với VN-Index: trung vị 0,48 (-0,05 – 0,76)
+Tương quan bình quân trên cửa sổ trượt 126 phiên: thấp nhất 0,07 (02/01/2020), cao nhất 0,44 (21/10/2022); hệ số tương quan giữa tương quan bình quân và biến động VN-Index: 0,84

@@ -1,0 +1,9 @@
+﻿,,ln_nam,bd_nam,beta,sgtd
+pearson,ln_nam,1.0,-0.155,0.168,-0.537
+pearson,bd_nam,-0.155,1.0,0.418,0.763
+pearson,beta,0.168,0.418,1.0,0.437
+pearson,sgtd,-0.537,0.763,0.437,1.0
+spearman,ln_nam,1.0,0.047,0.215,-0.374
+spearman,bd_nam,0.047,1.0,0.419,0.712
+spearman,beta,0.215,0.419,1.0,0.43
+spearman,sgtd,-0.374,0.712,0.43,1.0

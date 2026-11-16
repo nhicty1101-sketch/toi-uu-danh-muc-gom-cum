@@ -27,6 +27,7 @@ Kho không kèm các tệp gốc của CafeF và Investing.com, cũng không kè
    - tạo tệp `.env` ở thư mục gốc với `MYSQL_HOST`, `MYSQL_USER`, `MYSQL_PASSWORD`, `MYSQL_DB` (tệp này không được đưa lên GitHub);
    - đặt `NAP_MYSQL = True` trong `01_lay_du_lieu_cafef.py` rồi chạy lại để nạp bảng giá;
    - chạy `.venv/bin/python 03_nap_ro_mysql.py` để nạp bảng rổ.
+6. Chạy `.venv/bin/python 04_kham_pha_du_lieu.py`; bảng và hình ghi vào ket_qua/eda/.
 
 ## Các tệp trong kho
 
@@ -39,3 +40,5 @@ Kho không kèm các tệp gốc của CafeF và Investing.com, cũng không kè
 | `nhat_ky_du_lieu.md` | Nhật ký dữ liệu: nguồn, ngày tải, kết quả kiểm tra, các thay đổi |
 | `data/processed/` | Rổ 100 mã, danh sách ứng viên, kết quả kiểm tra điều chỉnh giá, độ phủ dữ liệu, lãi suất phi rủi ro bình quân năm và theo quý, báo cáo dữ liệu |
 | `phu_luc/` | Bảng đối chiếu lãi suất trúng thầu và lợi suất thứ cấp |
+| `04_kham_pha_du_lieu.py` | Khám phá dữ liệu: chất lượng dữ liệu, thống kê mô tả, diễn biến thị trường, đặc trưng gom cụm, tương quan giữa các mã |
+| `ket_qua/eda/` | Bảng và hình của bước khám phá dữ liệu |

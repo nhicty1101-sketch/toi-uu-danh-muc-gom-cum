@@ -53,7 +53,7 @@ SO_PHIEN_XET_BUOC_GIA = 20           # cần ít nhất 20 phiên giá dưới 5
 SO_PHIEN_CUOI_NAM = 20               # số phiên cuối năm 2019 dùng làm bằng chứng đang ở HOSE
 SO_GIA_LE_BANG_CHUNG = 3             # cần ít nhất 3 mức giá lẻ bước 10/50 đồng trong các phiên đó
 THU_MUC_SAN_2019 = RAW / "cafef_san_2019"   # tùy chọn: tệp Upto của CafeF chốt cuối năm 2019
-NAP_MYSQL = False                   # đổi thành True khi đã tạo bảng bằng 02_tao_bang_mysql.sql
+NAP_MYSQL = False                  # đổi thành True khi đã tạo bảng bằng 02_tao_bang_mysql.sql
 
 BAO_CAO = []                         # các dòng ghi vào bao_cao_du_lieu.txt
 
@@ -366,6 +366,9 @@ ghi("Mã trong rổ ngừng có dữ liệu trước cuối kỳ (giữ lại, k
 #   tien_mat_dong (đồng/cổ phiếu, để trống nếu không có), nguon
 # Hệ số = (P - D) / (1 + r) / P, với P là giá đóng cửa chưa điều chỉnh phiên liền trước ngày GDKHQ.
 # Mọi giá đã điều chỉnh của mã TRƯỚC ngày GDKHQ được nhân với hệ số này.
+# Nếu CafeF đã điều chỉnh ngày đó: hệ số của CafeF khớp hệ số tính từ nguồn (lệch không quá 0,5%) thì bỏ qua;
+# lệch hơn 0,5% thì thay hệ số của CafeF bằng hệ số tính từ nguồn (ví dụ MWG 24/07/2025: CafeF dùng 0,8989
+# cho cổ tức tiền mặt 1.000 đồng, hệ số đúng là 0,9858).
 tep_bo_sung = RAW / "dieu_chinh_bo_sung.csv"
 if tep_bo_sung.exists():
     bs = pd.read_csv(tep_bo_sung, dtype=str, sep=None, engine="python", encoding="utf-8-sig").fillna("")
@@ -379,15 +382,22 @@ if tep_bo_sung.exists():
         truoc_gd, tu_gd = g_ma[g_ma["ngay"] < ngay_gd], g_ma[g_ma["ngay"] >= ngay_gd]
         if truoc_gd.empty or tu_gd.empty:
             raise SystemExit(f"dieu_chinh_bo_sung.csv: {ma} không có giá quanh ngày {ngay_gd:%d/%m/%Y}")
-        # Nếu tỷ số giá đã điều chỉnh/giá gốc đã nhảy bậc ở ngày này thì CafeF đã điều chỉnh rồi: bỏ qua.
+        # Tỷ số giá đã điều chỉnh/giá gốc nhảy bậc ở ngày này nghĩa là CafeF đã điều chỉnh, với hệ số he_so_cafef.
         ts_truoc = truoc_gd["dong_dc"].iloc[-1] / truoc_gd["dong_goc"].iloc[-1]
         ts_sau = tu_gd["dong_dc"].iloc[0] / tu_gd["dong_goc"].iloc[0]
-        if abs(ts_truoc / ts_sau - 1) > 0.005:
-            ghi(f"Bỏ qua bổ sung {ma} {ngay_gd:%d/%m/%Y}: CafeF đã điều chỉnh ngày này (hệ số {ts_truoc / ts_sau:.4f})")
-            continue
+        he_so_cafef = ts_truoc / ts_sau
         P = truoc_gd["dong_goc"].iloc[-1]
         he_so = (P - so(r["tien_mat_dong"]) / 1000) / (1 + so(r["ty_le_co_phieu"]) / 100) / P
         truoc = (dc["ma"] == ma) & (dc["ngay"] < ngay_gd)
+        if abs(he_so_cafef - 1) > 0.005:
+            if abs(he_so_cafef / he_so - 1) <= 0.005:
+                ghi(f"Bỏ qua bổ sung {ma} {ngay_gd:%d/%m/%Y}: CafeF đã điều chỉnh đúng ngày này "
+                    f"(hệ số CafeF {he_so_cafef:.4f}, theo nguồn {he_so:.4f})")
+                continue
+            dc.loc[truoc, ["mo", "cao", "thap", "dong"]] *= he_so / he_so_cafef
+            ghi(f"Thay hệ số CafeF {ma} {ngay_gd:%d/%m/%Y}: {he_so_cafef:.4f} -> {he_so:.4f} cho {int(truoc.sum())} "
+                f"phiên trước đó (nguồn: {r['nguon']})")
+            continue
         dc.loc[truoc, ["mo", "cao", "thap", "dong"]] *= he_so
         ghi(f"Bổ sung điều chỉnh {ma} {ngay_gd:%d/%m/%Y}: hệ số {he_so:.4f} cho {int(truoc.sum())} phiên trước đó "
             f"(nguồn: {r['nguon']})")

@@ -1,4 +1,4 @@
-Ngày chạy: 13/11/2026 12:02
+Ngày chạy: 16/11/2026 13:07
   cafef_dieu_chinh: tệp chốt ngày 31/12/2025
   cafef_dieu_chinh: bỏ 79 dòng trùng (mã, ngày)
   cafef_chua_dieu_chinh: tệp chốt ngày 31/12/2025
@@ -18,8 +18,9 @@ Bổ sung điều chỉnh MWG 30/08/2021: hệ số 0.6667 cho 1782 phiên trư�
 Bổ sung điều chỉnh PVD 29/07/2019: hệ số 0.9091 cho 3144 phiên trước đó (nguồn: Vietstock: cổ tức bằng cổ phiếu 10% - GDKHQ 29/07/2019 - tra 12/11/2026)
 Bổ sung điều chỉnh TNA 20/08/2020: hệ số 0.8696 cho 3504 phiên trước đó (nguồn: VSD: phát hành cổ phiếu trả cổ tức 2019 - ĐKCC 21/08/2020 / ĐTCK 11/08/2020: tỷ lệ 15% - tra 12/11/2026)
 Bổ sung điều chỉnh TPB 13/05/2025: hệ số 0.9322 cho 1759 phiên trước đó (nguồn: DNSE: cổ tức tiền mặt 10% (1.000 đ) - GDKHQ 13/05/2025 - tra 12/11/2026)
+Thay hệ số CafeF MWG 24/07/2025: 0.8989 -> 0.9858 cho 2753 phiên trước đó (nguồn: https://vneconomy.vn/mwg-chot-danh-sach-co-dong-chi-gan-1-480-ty-dong-co-tuc-2024.htm)
 Bỏ 1 ngày có giá nhưng không có phiên VN-Index (ví dụ 17/05/2024)
-Số lần giá đã điều chỉnh nhảy bậc so với giá gốc: 645 ở 87 mã; hệ số từ 0,95 trở lên (cỡ cổ tức tiền mặt): 343
+Số lần giá đã điều chỉnh nhảy bậc so với giá gốc: 645 ở 87 mã; hệ số từ 0,95 trở lên (cỡ cổ tức tiền mặt): 344
 Ngày giá gốc giảm quá 7.5% (thường là ngày GDKHQ): 285; trong đó giá điều chỉnh vẫn giảm mạnh: 70, gồm 48 lần sau nhiều phiên không giao dịch (bình thường) và 22 lần giữa hai phiên liền nhau (cần xem lại)
   Mã có ngày cần xem lại: FTM (14), HNG (4), HBC (2), IJC (1), SCR (1)
 Tỷ lệ ô thiếu trung bình: 2.94%; mã thiếu nhiều nhất: GTN (54.7%)

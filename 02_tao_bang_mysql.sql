@@ -40,3 +40,20 @@ SELECT * FROM gia_ngay WHERE dong_cua_dc IS NULL OR dong_cua_dc <= 0;
 -- 3) Mã có trong rổ nhưng chưa có giá
 SELECT r.ma FROM ro_co_phieu r LEFT JOIN gia_ngay g ON r.ma = g.ma WHERE g.ma IS NULL;
 
+-- 4) Ngày thứ Hai đến thứ Sáu không có phiên VN-Index, kèm số mã có giá trong ngày
+--    Kết quả 16/11/2026 (ket_qua/eda/kiem_tra_lich_phien.csv): 77 ngày nghỉ lễ;
+--    17/05/2024 có giá 96 mã nhưng thiếu VN-Index; 03/02/2025 CafeF mất cả phiên.
+SET SESSION cte_max_recursion_depth = 3000;
+
+WITH RECURSIVE lich AS (
+    SELECT DATE('2019-01-02') AS ngay
+    UNION ALL
+    SELECT ngay + INTERVAL 1 DAY FROM lich WHERE ngay < '2025-12-31'
+)
+SELECT l.ngay, DAYNAME(l.ngay) AS thu,
+       (SELECT COUNT(*) FROM tieu_luan_khdl.gia_ngay g WHERE g.ngay = l.ngay) AS so_ma_co_gia
+FROM lich l
+WHERE WEEKDAY(l.ngay) < 5
+  AND l.ngay NOT IN (SELECT ngay FROM tieu_luan_khdl.gia_ngay WHERE ma = 'VNINDEX')
+ORDER BY l.ngay;
+
