@@ -45,3 +45,5 @@ Kho không kèm các tệp gốc của CafeF và Investing.com, cũng không kè
 | `cong_cu.py` | Hàm dùng chung: lịch tái cân bằng, điều kiện chọn mã, đặc trưng, hai trục, K-Means |
 | `05_gom_cum.py` | Gom cụm: chọn k, K-Means hai trục qua 20 kỳ, so sánh với K-Means bốn đặc trưng và gom cụm phân cấp theo tương quan |
 | `ket_qua/gom_cum/` | Bảng và hình của bước gom cụm |
+| `06_kiem_tra_ngoai_mau.py` | Kiểm tra ngoài mẫu S1–S5 và biến thể đối chứng S4đc, kiểm định chênh lệch Sharpe; 20 kỳ tái cân bằng, phí 0,2% mỗi chiều |
+| `ket_qua/kiem_tra/` | Chỉ tiêu hiệu quả, lợi suất theo năm, tỷ trọng và vòng quay từng kỳ, kiểm định Sharpe, hình 11–14 |
