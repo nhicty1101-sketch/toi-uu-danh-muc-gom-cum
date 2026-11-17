@@ -31,14 +31,14 @@ Chạy từ thư mục gốc dự án:  .venv/bin/python 06_kiem_tra_ngoai_mau.p
 import numpy as np
 import pandas as pd
 import matplotlib
-from scipy.stats import norm
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-from cong_cu import (CUA_SO, GOC, PHI_GIAO_DICH, PHIEN_NAM, SO_MA_MOI_CUM, TRAN_S3, TRAN_S4, doc_gia,
-                     doc_ngay_cuoi_hose, doc_rf, doc_ro, du_dieu_kien, hai_truc, hrp, kmeans_co_thu_tu,
-                     lich_tai_can_bang, loi_suat, phuong_sai_nho_nhat, sharpe_cua_so, tinh_dac_trung)
+from cong_cu import (CUA_SO, GOC, PHI_GIAO_DICH, PHIEN_NAM, SO_MA_MOI_CUM, TRAN_S3, TRAN_S4, chi_tieu, doc_gia,
+                     doc_ngay_cuoi_hose, doc_rf, doc_ro, du_dieu_kien, hai_truc, hrp, kiem_dinh_sharpe,
+                     kmeans_co_thu_tu, lich_tai_can_bang, loi_suat, mo_phong, phuong_sai_nho_nhat, sharpe_cua_so,
+                     so_tre_hac, tinh_dac_trung)
 
 KQ = GOC / "ket_qua" / "kiem_tra"
 KQ.mkdir(parents=True, exist_ok=True)
@@ -196,36 +196,12 @@ if CO_DOI_CHUNG:
 ghi("\n=== PHẦN 2. MÔ PHỎNG ===")
 R = r_cp.fillna(0.0)                 # mã bị đình chỉ hoặc chưa có giá: lợi suất 0 (vị thế đóng băng)
 BAT_DAU = VT[0]
-TCB = {k: i + 1 for i, k in enumerate(VT)}
-
-
-def mo_phong(theo_ky):
-    """Mua và giữ trong kỳ; tái cân bằng ở giá đóng cửa các phiên giao dịch, trừ phí trên phần mua bán."""
-    h = pd.Series(dtype=float)       # giá trị nắm giữ từng mã
-    gia_tri_truoc = 1.0
-    loi_suat_ngay, vong_quay = [], []
-    for t in range(BAT_DAU, len(LICH)):
-        if len(h):
-            h = h * (1.0 + R.iloc[t][h.index])
-        gia_tri = h.sum() if len(h) else gia_tri_truoc
-        if t in TCB:
-            w_cu = h / gia_tri if len(h) else pd.Series(dtype=float)
-            w_moi = theo_ky[t]
-            chi_so = w_moi.index.union(w_cu.index)
-            vq = float((w_moi.reindex(chi_so, fill_value=0) - w_cu.reindex(chi_so, fill_value=0)).abs().sum())
-            gia_tri = gia_tri * (1 - PHI_GIAO_DICH * vq)
-            h = w_moi * gia_tri
-            vong_quay.append({"ky": TCB[t], "vong_quay_hai_chieu": vq, "phi": PHI_GIAO_DICH * vq})
-        loi_suat_ngay.append(gia_tri / gia_tri_truoc - 1)
-        gia_tri_truoc = gia_tri
-    return pd.Series(loi_suat_ngay, index=LICH[BAT_DAU:]), pd.DataFrame(vong_quay)
-
 
 LS = {"S1": r_vni.iloc[BAT_DAU:].copy()}
 LS["S1"].iloc[0] = 0.0               # mua chỉ số ở giá đóng cửa phiên giao dịch đầu tiên
 VQ = {}
 for s in DS_CL:
-    LS[s], VQ[s] = mo_phong(TY_TRONG[s])
+    LS[s], VQ[s], _ = mo_phong(TY_TRONG[s], R, BAT_DAU)
 LS = pd.DataFrame(LS)
 LS.to_csv(KQ / "loi_suat_ngay_chien_luoc.csv", encoding="utf-8-sig", date_format="%Y-%m-%d", float_format="%.8f")
 GT = (1 + LS).cumprod()
@@ -235,25 +211,6 @@ ghi(f"{len(LS)} phiên từ {LS.index[0]:%d/%m/%Y} đến {LS.index[-1]:%d/%m/%Y
 
 
 # %% 4. Chỉ tiêu hiệu quả
-def chi_tieu(x, rf_x):
-    n = len(x)
-    vuot = x - rf_x
-    gt = (1 + x).cumprod()
-    duoi = np.sqrt((np.minimum(vuot, 0) ** 2).mean())
-    sgtd = (gt / gt.cummax() - 1).min()
-    ln = gt.iloc[-1] ** (PHIEN_NAM / n) - 1
-    return pd.Series({
-        "loi_suat_tich_luy": gt.iloc[-1] - 1,
-        "loi_suat_nam_hoa": ln,
-        "do_bien_dong_nam_hoa": x.std() * np.sqrt(PHIEN_NAM),
-        "sharpe": vuot.mean() / vuot.std() * np.sqrt(PHIEN_NAM),
-        "sortino": vuot.mean() * PHIEN_NAM / (duoi * np.sqrt(PHIEN_NAM)),
-        "sut_giam_toi_da": sgtd,
-        "calmar": ln / abs(sgtd) if sgtd < 0 else np.nan,
-        "so_phien": n,
-    })
-
-
 rf_kt = rf.iloc[BAT_DAU:]
 bang = pd.DataFrame({CHIEN_LUOC[s]: chi_tieu(LS[s], rf_kt) for s in LS.columns}).T
 for s in DS_CL:
@@ -298,30 +255,6 @@ for ten, (a, b) in GIAI_DOAN_CON.items():
 
 
 # %% 5. Kiểm định chênh lệch Sharpe (Ledoit & Wolf, 2008, bản HAC)
-def kiem_dinh_sharpe(x1, x2, tre=None):
-    """H0: Sharpe(x1) = Sharpe(x2). x1, x2 là lợi suất vượt rf theo phiên, cùng độ dài.
-    Phương pháp delta trên bốn mômen (trung bình và mômen bậc hai của hai chuỗi); ma trận hiệp phương sai
-    ước lượng bằng HAC nhân Bartlett (Newey–West) để chịu được tự tương quan và phương sai thay đổi.
-    Trả về chênh lệch Sharpe năm hóa, sai số chuẩn năm hóa, thống kê z, p-value hai phía."""
-    x = np.column_stack([x1, x2])
-    T = len(x)
-    mu = x.mean(axis=0)
-    g = (x ** 2).mean(axis=0)
-    v = g - mu ** 2
-    chenh = mu[0] / np.sqrt(v[0]) - mu[1] / np.sqrt(v[1])
-    grad = np.array([g[0] / v[0] ** 1.5, -g[1] / v[1] ** 1.5, -0.5 * mu[0] / v[0] ** 1.5, 0.5 * mu[1] / v[1] ** 1.5])
-    y = np.column_stack([x[:, 0] - mu[0], x[:, 1] - mu[1], x[:, 0] ** 2 - g[0], x[:, 1] ** 2 - g[1]])
-    if tre is None:
-        tre = int(np.floor(4 * (T / 100) ** (2 / 9)))
-    psi = y.T @ y / T
-    for j in range(1, tre + 1):
-        G = y[j:].T @ y[:-j] / T
-        psi += (1 - j / (tre + 1)) * (G + G.T)
-    sai_so = np.sqrt(grad @ psi @ grad / T)
-    z = chenh / sai_so
-    return chenh * np.sqrt(PHIEN_NAM), sai_so * np.sqrt(PHIEN_NAM), z, 2 * norm.sf(abs(z))
-
-
 VUOT = LS.sub(rf_kt, axis=0)
 CAP_SO_SANH = [("S2", "S1"), ("S3", "S1"), ("S4", "S1"), ("S4dc", "S1"), ("S5", "S1"),
                ("S4", "S2"), ("S4", "S3"), ("S4", "S5"), ("S4", "S4dc"),
@@ -337,7 +270,7 @@ for a, b in CAP_SO_SANH:
 cap = pd.DataFrame(cap)
 cap.to_csv(KQ / "kiem_dinh_sharpe.csv", index=False, encoding="utf-8-sig", float_format="%.4f")
 ghi("\n=== PHẦN 4. KIỂM ĐỊNH CHÊNH LỆCH SHARPE (Ledoit & Wolf, 2008, HAC Bartlett, "
-    f"{int(np.floor(4 * (len(LS) / 100) ** (2 / 9))) if TRE_HAC is None else TRE_HAC} độ trễ) ===")
+    f"{so_tre_hac(len(LS)) if TRE_HAC is None else TRE_HAC} độ trễ) ===")
 ghi("Cả giai đoạn; chênh lệch = Sharpe(a) − Sharpe(b), năm hóa:")
 for _, x in cap[cap["giai_doan"] == "Cả giai đoạn"].iterrows():
     dau = "**" if x.p_value < 0.05 else ("*" if x.p_value < 0.10 else "")

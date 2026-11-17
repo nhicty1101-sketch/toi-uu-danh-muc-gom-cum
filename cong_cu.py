@@ -104,22 +104,22 @@ def lich_tai_can_bang(lich):
     return vt, bang
 
 
-def du_dieu_kien(gia_cp, k, ngay_cuoi_hose):
+def du_dieu_kien(gia_cp, k, ngay_cuoi_hose, cua_so=CUA_SO):
     """Mã được chọn ở kỳ bắt đầu từ phiên k (quyết định bằng dữ liệu đến phiên k - 1)."""
     lich = gia_cp.index
-    cua_so = gia_cp.iloc[k - CUA_SO:k]
-    thieu = cua_so.isna().mean()
+    cs = gia_cp.iloc[k - cua_so:k]
+    thieu = cs.isna().mean()
     con_niem_yet = ngay_cuoi_hose.isna() | (ngay_cuoi_hose > lich[k - 1])
-    co_gia = cua_so.iloc[-1].notna()
+    co_gia = cs.iloc[-1].notna()
     return pd.DataFrame({"ty_le_thieu": thieu, "con_niem_yet": con_niem_yet, "co_gia_ngay_quyet_dinh": co_gia,
                          "du": (thieu <= NGUONG_THIEU) & con_niem_yet & co_gia})
 
 
-def tinh_dac_trung(r_cp, r_vni, gia_ff_cp, k, ds_ma):
-    """Bốn đặc trưng của các mã trong ds_ma, tính trên CUA_SO phiên ngay trước phiên k."""
-    rr = r_cp.iloc[k - CUA_SO:k][ds_ma]
-    rm = r_vni.iloc[k - CUA_SO:k]
-    p = gia_ff_cp.iloc[k - CUA_SO:k][ds_ma]
+def tinh_dac_trung(r_cp, r_vni, gia_ff_cp, k, ds_ma, cua_so=CUA_SO):
+    """Bốn đặc trưng của các mã trong ds_ma, tính trên cua_so phiên ngay trước phiên k."""
+    rr = r_cp.iloc[k - cua_so:k][ds_ma]
+    rm = r_vni.iloc[k - cua_so:k]
+    p = gia_ff_cp.iloc[k - cua_so:k][ds_ma]
     beta = {m: rr[m].cov(rm) / rm[rr[m].notna()].var() for m in ds_ma}
     return pd.DataFrame({
         "ln_nam": rr.mean() * PHIEN_NAM,
@@ -239,3 +239,97 @@ def sharpe_cua_so(rr, rf_cs):
     """Sharpe năm hóa của từng mã trong cửa sổ: trung bình lợi suất vượt rf chia độ lệch chuẩn."""
     vuot = rr.sub(rf_cs, axis=0)
     return vuot.mean() / rr.std() * np.sqrt(PHIEN_NAM)
+
+
+def mo_phong(theo_ky, R, bat_dau, phi=PHI_GIAO_DICH, dong_gop=False):
+    """Mô phỏng một chiến lược.
+    theo_ky: {vị trí phiên giao dịch k: Series tỷ trọng mục tiêu}; R: lợi suất theo phiên của các mã (ô trống
+    đã thay bằng 0); bat_dau: vị trí phiên giao dịch đầu tiên.
+    Trong kỳ mua và giữ (tỷ trọng trôi theo giá). Ở phiên giao dịch, sau khi ghi nhận lợi suất của phiên đó,
+    danh mục được đưa về tỷ trọng mục tiêu ở giá đóng cửa, phí = phi × tổng |tỷ trọng mới − tỷ trọng đã trôi|.
+    Trả về: lợi suất danh mục theo phiên; vòng quay từng kỳ; nếu dong_gop=True thì thêm bảng đóng góp của từng
+    mã vào lợi suất mỗi năm (lãi/lỗ tiền của mã chia cho giá trị danh mục đầu năm; dòng "(phí giao dịch)" mang
+    dấu âm), tổng theo năm đúng bằng lợi suất năm."""
+    lich = R.index
+    so_ky = {k: i + 1 for i, k in enumerate(sorted(theo_ky))}
+    h = pd.Series(dtype=float)
+    gia_tri_truoc = 1.0
+    loi_suat_ngay, vong_quay = [], []
+    lai, phi_nam, dau_nam = {}, {}, {}
+    for t in range(bat_dau, len(lich)):
+        nam = lich[t].year
+        dau_nam.setdefault(nam, gia_tri_truoc)
+        if len(h):
+            r_t = R.iloc[t][h.index]
+            if dong_gop:
+                for m, v in (h * r_t).items():
+                    lai[(nam, m)] = lai.get((nam, m), 0.0) + v
+            h = h * (1.0 + r_t)
+        gia_tri = h.sum() if len(h) else gia_tri_truoc
+        if t in so_ky:
+            w_cu = h / gia_tri if len(h) else pd.Series(dtype=float)
+            w_moi = theo_ky[t]
+            chi_so = w_moi.index.union(w_cu.index)
+            vq = float((w_moi.reindex(chi_so, fill_value=0) - w_cu.reindex(chi_so, fill_value=0)).abs().sum())
+            phi_nam[nam] = phi_nam.get(nam, 0.0) + gia_tri * phi * vq
+            gia_tri = gia_tri * (1 - phi * vq)
+            h = w_moi * gia_tri
+            vong_quay.append({"ky": so_ky[t], "vong_quay_hai_chieu": vq, "phi": phi * vq})
+        loi_suat_ngay.append(gia_tri / gia_tri_truoc - 1)
+        gia_tri_truoc = gia_tri
+    ls = pd.Series(loi_suat_ngay, index=lich[bat_dau:])
+    if not dong_gop:
+        return ls, pd.DataFrame(vong_quay), None
+    dg = [{"nam": n, "ma": m, "dong_gop": v / dau_nam[n]} for (n, m), v in lai.items()]
+    dg += [{"nam": n, "ma": "(phí giao dịch)", "dong_gop": -v / dau_nam[n]} for n, v in phi_nam.items()]
+    return ls, pd.DataFrame(vong_quay), pd.DataFrame(dg)
+
+
+def chi_tieu(x, rf_x):
+    """Các chỉ tiêu hiệu quả của chuỗi lợi suất theo phiên x; rf_x là lãi suất phi rủi ro cùng phiên."""
+    n = len(x)
+    vuot = x - rf_x
+    gt = (1 + x).cumprod()
+    duoi = np.sqrt((np.minimum(vuot, 0) ** 2).mean())
+    sgtd = (gt / gt.cummax() - 1).min()
+    ln = gt.iloc[-1] ** (PHIEN_NAM / n) - 1
+    return pd.Series({
+        "loi_suat_tich_luy": gt.iloc[-1] - 1,
+        "loi_suat_nam_hoa": ln,
+        "do_bien_dong_nam_hoa": x.std() * np.sqrt(PHIEN_NAM),
+        "sharpe": vuot.mean() / vuot.std() * np.sqrt(PHIEN_NAM),
+        "sortino": vuot.mean() * PHIEN_NAM / (duoi * np.sqrt(PHIEN_NAM)),
+        "sut_giam_toi_da": sgtd,
+        "calmar": ln / abs(sgtd) if sgtd < 0 else np.nan,
+        "so_phien": n,
+    })
+
+
+def so_tre_hac(T):
+    return int(np.floor(4 * (T / 100) ** (2 / 9)))
+
+
+def kiem_dinh_sharpe(x1, x2, tre=None):
+    """Kiểm định H0: Sharpe(x1) = Sharpe(x2) theo Ledoit & Wolf (2008), bản sai số HAC.
+    x1, x2 là lợi suất vượt rf theo phiên, cùng độ dài. Phương pháp delta trên bốn mômen (trung bình và mômen
+    bậc hai của hai chuỗi); ma trận hiệp phương sai của các mômen ước lượng bằng HAC nhân Bartlett
+    (Newey–West), chịu được tự tương quan và phương sai thay đổi.
+    Trả về chênh lệch Sharpe năm hóa, sai số chuẩn năm hóa, thống kê z, p-value hai phía."""
+    from scipy.stats import norm
+    x = np.column_stack([x1, x2])
+    T = len(x)
+    mu = x.mean(axis=0)
+    g = (x ** 2).mean(axis=0)
+    v = g - mu ** 2
+    chenh = mu[0] / np.sqrt(v[0]) - mu[1] / np.sqrt(v[1])
+    grad = np.array([g[0] / v[0] ** 1.5, -g[1] / v[1] ** 1.5, -0.5 * mu[0] / v[0] ** 1.5, 0.5 * mu[1] / v[1] ** 1.5])
+    y = np.column_stack([x[:, 0] - mu[0], x[:, 1] - mu[1], x[:, 0] ** 2 - g[0], x[:, 1] ** 2 - g[1]])
+    if tre is None:
+        tre = so_tre_hac(T)
+    psi = y.T @ y / T
+    for j in range(1, tre + 1):
+        G = y[j:].T @ y[:-j] / T
+        psi += (1 - j / (tre + 1)) * (G + G.T)
+    sai_so = np.sqrt(grad @ psi @ grad / T)
+    z = chenh / sai_so
+    return chenh * np.sqrt(PHIEN_NAM), sai_so * np.sqrt(PHIEN_NAM), z, 2 * norm.sf(abs(z))

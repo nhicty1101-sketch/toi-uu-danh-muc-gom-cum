@@ -46,4 +46,6 @@ Kho không kèm các tệp gốc của CafeF và Investing.com, cũng không kè
 | `05_gom_cum.py` | Gom cụm: chọn k, K-Means hai trục qua 20 kỳ, so sánh với K-Means bốn đặc trưng và gom cụm phân cấp theo tương quan |
 | `ket_qua/gom_cum/` | Bảng và hình của bước gom cụm |
 | `06_kiem_tra_ngoai_mau.py` | Kiểm tra ngoài mẫu S1–S5 và biến thể đối chứng S4đc, kiểm định chênh lệch Sharpe; 20 kỳ tái cân bằng, phí 0,2% mỗi chiều |
-| `ket_qua/kiem_tra/` | Chỉ tiêu hiệu quả, lợi suất theo năm, tỷ trọng và vòng quay từng kỳ, kiểm định Sharpe, hình 11–14 |
+| `ket_qua/kiem_tra/` | Chỉ tiêu hiệu quả, lợi suất theo năm, tỷ trọng và vòng quay từng kỳ, kiểm định Sharpe, hình 11–14 | 
+| `07_do_vung.py` | Kiểm định độ vững: rf = 0, phí 0%/0,4%, mất trắng 5 mã đình chỉ, cửa sổ 252/504/756, tái cân bằng 21/63/126 phiên, Ledoit–Wolf, K-Means bốn đặc trưng, Sharpe > 0, loại mã đứng giá; đóng góp lợi suất theo mã |
+| `ket_qua/do_vung/` | Chỉ tiêu và kiểm định Sharpe theo từng cấu hình, đóng góp theo mã, hình 15–16 |
