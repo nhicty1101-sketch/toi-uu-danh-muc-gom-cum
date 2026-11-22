@@ -13,6 +13,10 @@ Năm chiến lược, cùng lịch 20 kỳ tái cân bằng (cửa sổ 504 phi�
 Biến thể đối chứng (CO_DOI_CHUNG = True):
   S4đc: bỏ bước gom cụm – lấy 8 mã có Sharpe cao nhất toàn rổ, cùng tối ưu và trần 25% như S4.
   Chênh lệch S4 – S4đc là phần đóng góp riêng của gom cụm.
+  S4tq (thêm 22/11/2026): giữ nguyên quy tắc của S4 (2 mã Sharpe cao nhất mỗi nhóm, phương sai nhỏ nhất, trần 25%)
+  nhưng nhóm lấy từ gom cụm phân cấp theo tương quan (Ward, k nhóm như 05). Chênh lệch S4 – S4tq là ảnh hưởng riêng
+  của cơ sở gom cụm (rủi ro – lợi suất so với tương quan) khi quy tắc phân bổ giữ nguyên.
+  Kèm theo: độ ổn định của nhóm theo tương quan giữa hai kỳ liền nhau (ARI).
 
 Quy ước đã chốt:
   - tỷ trọng tính bằng dữ liệu đến giá đóng cửa ngày quyết định; mua bán ở giá đóng cửa phiên kế tiếp;
@@ -35,17 +39,21 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
+from sklearn.metrics import adjusted_rand_score
+
 from cong_cu import (CUA_SO, GOC, PHI_GIAO_DICH, PHIEN_NAM, SO_MA_MOI_CUM, TRAN_S3, TRAN_S4, chi_tieu, doc_gia,
                      doc_ngay_cuoi_hose, doc_rf, doc_ro, du_dieu_kien, hai_truc, hrp, kiem_dinh_sharpe,
-                     kmeans_co_thu_tu, lich_tai_can_bang, loi_suat, mo_phong, phuong_sai_nho_nhat, sharpe_cua_so,
-                     so_tre_hac, tinh_dac_trung)
+                     kmeans_co_thu_tu, lich_tai_can_bang, loi_suat, mo_phong, nhom_tuong_quan, phuong_sai_nho_nhat,
+                     sharpe_cua_so, so_tre_hac, tinh_dac_trung)
 
 KQ = GOC / "ket_qua" / "kiem_tra"
 KQ.mkdir(parents=True, exist_ok=True)
 K_MIN, K_MAX = 3, 8
 CO_DOI_CHUNG = True          # False: bỏ biến thể S4đc
+CO_S4TQ = True               # False: bỏ biến thể S4tq
 CHIEN_LUOC = {"S1": "S1 VN-Index", "S2": "S2 1/N", "S3": "S3 Markowitz", "S4": "S4 K-Means + Markowitz",
-              "S4dc": "S4đc Top-8 Sharpe (không gom cụm)", "S5": "S5 HRP"}
+              "S4dc": "S4đc Top-8 Sharpe (không gom cụm)", "S4tq": "S4tq Tương quan (Ward) + Markowitz",
+              "S5": "S5 HRP"}
 GIAI_DOAN_CON = {"Kỳ 1–4": (1, 4), "Kỳ 5–8": (5, 8), "Kỳ 9–20": (9, 20)}
 NGUONG_DUNG_GIA = 0.15       # mã có trên 15% phiên giá đứng yên trong cửa sổ: theo dõi riêng
 TRE_HAC = None               # số trễ Newey–West; None: floor(4(T/100)^(2/9))
@@ -72,8 +80,9 @@ def ngan(s):
 
 plt.rcParams.update({"figure.dpi": 110, "savefig.dpi": 200, "font.size": 9,
                      "axes.spines.top": False, "axes.spines.right": False})
-MAU = {"S1": "#7F7F7F", "S2": "#4C78A8", "S3": "#F58518", "S4": "#54A24B", "S4dc": "#B279A2", "S5": "#E45756"}
-NET = {"S4dc": "--"}
+MAU = {"S1": "#7F7F7F", "S2": "#4C78A8", "S3": "#F58518", "S4": "#54A24B", "S4dc": "#B279A2", "S4tq": "#1B9E9E",
+       "S5": "#E45756"}
+NET = {"S4dc": "--", "S4tq": "-."}
 
 
 # %% 1. Dữ liệu
@@ -101,9 +110,14 @@ dung_yen = (gia_cp == gia_cp.shift()) & lien_tiep
 
 # %% 2. Tỷ trọng mục tiêu của từng chiến lược ở mỗi kỳ
 ghi("\n=== PHẦN 1. TỶ TRỌNG MỖI KỲ ===")
-TY_TRONG = {s: {} for s in ["S2", "S3", "S4"] + (["S4dc"] if CO_DOI_CHUNG else []) + ["S5"]}
+TY_TRONG = {s: {} for s in ["S2", "S3", "S4"] + (["S4dc"] if CO_DOI_CHUNG else []) + (["S4tq"] if CO_S4TQ else [])
+             + ["S5"]}
 DS_CL = list(TY_TRONG)       # các chiến lược có danh mục (trừ S1)
 nhat_ky_s4, tap_trung, doi_chung = [], [], []
+nhat_ky_tq, so_voi_tq, nhom_truoc, nhan_truoc = [], [], None, None
+# Nhóm theo tương quan mà 05 đã lưu, để đối chiếu với nhóm S4tq tính lại ở đây (phải trùng hoàn toàn)
+tep_nhan_05 = GOC / "ket_qua" / "gom_cum" / "nhan_cum_theo_ky.csv"
+NHAN_05 = pd.read_csv(tep_nhan_05, encoding="utf-8-sig", dtype={"ma": str}) if tep_nhan_05.exists() else None
 for i, k in enumerate(VT):
     ky = i + 1
     dk = du_dieu_kien(gia_cp, k, NGAY_CUOI)
@@ -142,6 +156,41 @@ for i, k in enumerate(VT):
                           "so_ma_chung": len(set(chon) & set(chon_dc)),
                           "ty_trong_chung": float(np.minimum(w4.reindex(hop, fill_value=0),
                                                              wdc.reindex(hop, fill_value=0)).sum())})
+
+    # S4tq: cùng quy tắc chọn mã và phân bổ như S4, nhưng nhóm lấy từ gom cụm phân cấp theo tương quan
+    if CO_S4TQ:
+        nhom = nhom_tuong_quan(r_cp, k, ma, K)
+        chon_tq = []
+        for g in sorted(nhom.unique()):
+            top = sh[nhom.index[nhom == g]].sort_values(ascending=False).head(SO_MA_MOI_CUM)
+            chon_tq += list(top.index)
+            nhat_ky_tq.append({"ky": ky, "nhom": int(g), "so_ma_nhom": int((nhom == g).sum()),
+                               "ma_chon": " ".join(top.index), "sharpe": " ".join(so(v) for v in top.values),
+                               "ln_nam_trung_vi_nhom": dt.loc[nhom == g, "ln_nam"].median()})
+        idx_tq = [ma.index(m) for m in chon_tq]
+        TY_TRONG["S4tq"][k] = pd.Series(phuong_sai_nho_nhat(S[np.ix_(idx_tq, idx_tq)], TRAN_S4), index=chon_tq)
+        w4, wtq = TY_TRONG["S4"][k], TY_TRONG["S4tq"][k]
+        hop = w4.index.union(wtq.index)
+        chung_tr = nhom.index.intersection(nhom_truoc.index) if nhom_truoc is not None else []
+        chung_km = nhan.index.intersection(nhan_truoc.index) if nhan_truoc is not None else []
+        khop_05 = np.nan
+        if NHAN_05 is not None:
+            d05 = NHAN_05[NHAN_05["ky"] == ky].set_index("ma")["cum_tuong_quan"]
+            if set(d05.index) == set(nhom.index):
+                khop_05 = adjusted_rand_score(d05[nhom.index], nhom)
+        so_voi_tq.append({"ky": ky, "ma_s4": " ".join(chon), "ma_s4tq": " ".join(chon_tq),
+                          "so_ma_chung": len(set(chon) & set(chon_tq)),
+                          "ty_trong_chung": float(np.minimum(w4.reindex(hop, fill_value=0),
+                                                             wtq.reindex(hop, fill_value=0)).sum()),
+                          "co_nhom_nho_nhat": int(nhom.value_counts().min()),
+                          "co_nhom_lon_nhat": int(nhom.value_counts().max()),
+                          "ari_nhom_tq_voi_ky_truoc": adjusted_rand_score(nhom_truoc[chung_tr], nhom[chung_tr])
+                          if len(chung_tr) else np.nan,
+                          "ari_kmeans_voi_ky_truoc": adjusted_rand_score(nhan_truoc[chung_km], nhan[chung_km])
+                          if len(chung_km) else np.nan,
+                          "ari_kmeans_vs_tq": adjusted_rand_score(nhan[nhom.index], nhom),
+                          "ari_voi_nhom_05": khop_05})
+        nhom_truoc, nhan_truoc = nhom, nhan
 
     # Mức tập trung và mức dồn vào mã ít biến động giá
     ty_dung = dung_yen.iloc[k - CUA_SO:k][ma].sum() / lien_tiep.iloc[k - CUA_SO:k][ma].sum()
@@ -190,6 +239,25 @@ if CO_DOI_CHUNG:
     ghi(f"S4 so với S4đc: số mã ứng viên chung trung vị {dc['so_ma_chung'].median():.0f}/{len(chon)} "
         f"({dc['so_ma_chung'].min()}–{dc['so_ma_chung'].max()}); phần tỷ trọng trùng nhau trung vị "
         f"{pt(dc['ty_trong_chung'].median())} ({pt(dc['ty_trong_chung'].min())}–{pt(dc['ty_trong_chung'].max())})")
+if CO_S4TQ:
+    pd.DataFrame(nhat_ky_tq).to_csv(KQ / "s4tq_ma_chon_theo_nhom.csv", index=False, encoding="utf-8-sig",
+                                    float_format="%.4f")
+    tq = pd.DataFrame(so_voi_tq)
+    tq.to_csv(KQ / "s4_so_voi_s4tq.csv", index=False, encoding="utf-8-sig", float_format="%.4f")
+    if tq["ari_voi_nhom_05"].notna().all():
+        so_khop = int((tq["ari_voi_nhom_05"] > 1 - 1e-9).sum())
+        ghi(f"Kiểm tra: nhóm theo tương quan tính ở đây trùng với nhóm của 05 ở {so_khop}/{len(tq)} kỳ"
+            + ("" if so_khop == len(tq) else " – KHÔNG KHỚP: chạy lại 05 rồi chạy lại 06"))
+    else:
+        ghi("Kiểm tra: không đối chiếu được với ket_qua/gom_cum/nhan_cum_theo_ky.csv (chạy lại 05 trước).")
+    ghi(f"S4tq: nhóm theo tương quan có {tq['co_nhom_nho_nhat'].min()}–{tq['co_nhom_nho_nhat'].max()} mã ở nhóm nhỏ "
+        f"nhất, nên mỗi nhóm luôn đủ {SO_MA_MOI_CUM} mã để chọn")
+    ghi(f"S4 so với S4tq: số mã ứng viên chung trung vị {tq['so_ma_chung'].median():.0f}/{len(chon)} "
+        f"({tq['so_ma_chung'].min()}–{tq['so_ma_chung'].max()}); phần tỷ trọng trùng nhau trung vị "
+        f"{pt(tq['ty_trong_chung'].median())} ({pt(tq['ty_trong_chung'].min())}–{pt(tq['ty_trong_chung'].max())})")
+    a, b = tq["ari_nhom_tq_voi_ky_truoc"].dropna(), tq["ari_kmeans_voi_ky_truoc"].dropna()
+    ghi(f"Độ ổn định thành viên giữa hai kỳ liền nhau (ARI): nhóm theo tương quan trung vị {so(a.median())} "
+        f"({so(a.min())}–{so(a.max())}); cụm K-Means hai trục trung vị {so(b.median())} ({so(b.min())}–{so(b.max())})")
 
 
 # %% 3. Mô phỏng giá trị danh mục
@@ -258,7 +326,8 @@ for ten, (a, b) in GIAI_DOAN_CON.items():
 VUOT = LS.sub(rf_kt, axis=0)
 CAP_SO_SANH = [("S2", "S1"), ("S3", "S1"), ("S4", "S1"), ("S4dc", "S1"), ("S5", "S1"),
                ("S4", "S2"), ("S4", "S3"), ("S4", "S5"), ("S4", "S4dc"),
-               ("S5", "S2"), ("S5", "S3"), ("S3", "S2"), ("S4dc", "S2")]
+               ("S5", "S2"), ("S5", "S3"), ("S3", "S2"), ("S4dc", "S2"),
+               ("S4", "S4tq"), ("S4tq", "S4dc"), ("S4tq", "S5"), ("S4tq", "S1"), ("S4tq", "S2"), ("S4tq", "S3")]
 cap = []
 for a, b in CAP_SO_SANH:
     if a in LS.columns and b in LS.columns:
@@ -277,7 +346,8 @@ for _, x in cap[cap["giai_doan"] == "Cả giai đoạn"].iterrows():
     ghi(f"  {x.chien_luoc_a} − {x.chien_luoc_b}: {so(x.chenh_lech_sharpe)} (sai số chuẩn {so(x.sai_so_chuan)}), "
         f"p = {so(x.p_value, 3)} {dau}")
 ghi("Ghi chú: ** p < 0,05; * p < 0,10. Kết quả theo giai đoạn con nằm trong kiem_dinh_sharpe.csv. Giai đoạn con "
-    "ngắn (kỳ 1–4 và 5–8 chỉ khoảng 250 phiên) nên kiểm định ở đó có độ mạnh thấp.")
+    "ngắn (kỳ 1–4 và 5–8 chỉ khoảng 250 phiên) nên kiểm định ở đó có độ mạnh thấp. "
+    f"Bản chính có {(cap['giai_doan'] == 'Cả giai đoạn').sum()} cặp kiểm định: không đọc một p nhỏ lẻ như bằng chứng.")
 
 
 # %% 6. Hình
@@ -312,7 +382,7 @@ fig, ax = plt.subplots(figsize=(7.5, 3.6))
 rong = 0.8 / len(LS.columns)
 for j, s in enumerate(LS.columns):
     ax.bar(theo_nam.index + (j - (len(LS.columns) - 1) / 2) * rong, theo_nam[ngan(s)] * 100, width=rong,
-           color=MAU[s], hatch="//" if s in NET else None, edgecolor="white" if s in NET else None, lw=0,
+           color=MAU[s], hatch={"S4dc": "//", "S4tq": ".."}.get(s), edgecolor="white" if s in NET else None, lw=0,
            label=CHIEN_LUOC[s])
 ax.axhline(0, color="black", lw=0.6)
 ax.set_xticks(theo_nam.index)
@@ -323,7 +393,7 @@ fig.savefig(KQ / "hinh_13_loi_suat_theo_nam.png")
 plt.close(fig)
 
 fig, (a1, a2) = plt.subplots(2, 1, figsize=(7.5, 4.6), sharex=True)
-for s in [s for s in ["S3", "S4", "S4dc", "S5"] if s in TY_TRONG]:
+for s in [s for s in ["S3", "S4", "S4dc", "S4tq", "S5"] if s in TY_TRONG]:
     t = tap_trung[tap_trung["chien_luoc"] == s].set_index("ky")
     for ax_, cot_ in [(a1, "ty_trong_lon_nhat"), (a2, "ty_trong_ma_dung_gia_nhieu")]:
         ax_.plot(t.index, t[cot_] * 100, marker="o", ms=4, ls=NET.get(s, "-"), color=MAU[s], label=CHIEN_LUOC[s])

@@ -7,6 +7,7 @@ S2 1/N: số mã nắm giữ 88–100; tỷ trọng lớn nhất trung vị 1,1%
 S3 Markowitz: số mã nắm giữ 15–28; tỷ trọng lớn nhất trung vị 10,0%; HHI trung vị 0,075; tỷ trọng ở mã đứng giá trên 15% số phiên: trung vị 22,4%, bình quân 25,3%, cao nhất 65,1%
 S4 K-Means + Markowitz: số mã nắm giữ 5–8; tỷ trọng lớn nhất trung vị 25,0%; HHI trung vị 0,210; tỷ trọng ở mã đứng giá trên 15% số phiên: trung vị 0,0%, bình quân 13,1%, cao nhất 74,9%
 S4đc Top-8 Sharpe (không gom cụm): số mã nắm giữ 5–8; tỷ trọng lớn nhất trung vị 25,0%; HHI trung vị 0,203; tỷ trọng ở mã đứng giá trên 15% số phiên: trung vị 0,0%, bình quân 8,6%, cao nhất 25,0%
+S4tq Tương quan (Ward) + Markowitz: số mã nắm giữ 5–8; tỷ trọng lớn nhất trung vị 25,0%; HHI trung vị 0,202; tỷ trọng ở mã đứng giá trên 15% số phiên: trung vị 0,0%, bình quân 11,4%, cao nhất 58,9%
 S5 HRP: số mã nắm giữ 88–100; tỷ trọng lớn nhất trung vị 6,8%; HHI trung vị 0,022; tỷ trọng ở mã đứng giá trên 15% số phiên: trung vị 14,3%, bình quân 14,5%, cao nhất 45,3%
   S3 kỳ 1, 5 mã lớn nhất: VPI 10,0% (đứng giá 17%); NVL 10,0% (đứng giá 14%); HPX 10,0% (đứng giá 25%); DBD 8,7% (đứng giá 17%); NBB 7,5% (đứng giá 15%)
   S3 kỳ 5, 5 mã lớn nhất: DBD 10,0% (đứng giá 18%); NVL 10,0% (đứng giá 13%); VPI 10,0% (đứng giá 12%); DHG 10,0% (đứng giá 10%); VJC 9,4% (đứng giá 12%)
@@ -18,33 +19,38 @@ S5 HRP: số mã nắm giữ 88–100; tỷ trọng lớn nhất trung vị 6,8%
   S5 kỳ 1, 5 mã lớn nhất: VPI 19,1% (đứng giá 17%); NVL 5,7% (đứng giá 14%); HPX 4,3% (đứng giá 25%); DBD 3,7% (đứng giá 17%); DHG 3,2% (đứng giá 12%)
 S4: 18 lượt cụm có lợi suất năm hóa trung vị âm vẫn góp 2 mã, ở các kỳ 1, 2, 3, 9, 10, 11, 12, 13, 14, 15, 16, 17
 S4 so với S4đc: số mã ứng viên chung trung vị 4/8 (2–5); phần tỷ trọng trùng nhau trung vị 40,7% (17,7%–58,6%)
+Kiểm tra: nhóm theo tương quan tính ở đây trùng với nhóm của 05 ở 20/20 kỳ
+S4tq: nhóm theo tương quan có 6–17 mã ở nhóm nhỏ nhất, nên mỗi nhóm luôn đủ 2 mã để chọn
+S4 so với S4tq: số mã ứng viên chung trung vị 4/8 (2–5); phần tỷ trọng trùng nhau trung vị 40,3% (16,8%–81,1%)
+Độ ổn định thành viên giữa hai kỳ liền nhau (ARI): nhóm theo tương quan trung vị 0,52 (0,06–0,83); cụm K-Means hai trục trung vị 0,47 (0,32–0,75)
 
 === PHẦN 2. MÔ PHỎNG ===
 1243 phiên từ 06/01/2021 đến 31/12/2025
 
 === PHẦN 3. KẾT QUẢ CẢ GIAI ĐOẠN ===
-                                  loi_suat_tich_luy loi_suat_nam_hoa do_bien_dong_nam_hoa sharpe sortino sut_giam_toi_da calmar vong_quay_hai_chieu_bq tong_phi
-S1 VN-Index                                   56,1%             9,4%                19,9%   0,40    0,53          -40,3%   0,23                                
-S2 1/N                                        83,7%            13,1%                22,7%   0,52    0,68          -53,6%   0,24                  14,5%     0,8%
-S3 Markowitz                                  51,7%             8,8%                13,2%   0,48    0,65          -29,0%   0,30                  27,6%     1,2%
-S4 K-Means + Markowitz                       137,6%            19,2%                21,7%   0,78    1,09          -56,4%   0,34                 143,4%     5,7%
-S4đc Top-8 Sharpe (không gom cụm)             39,9%             7,0%                19,9%   0,29    0,39          -57,6%   0,12                  77,5%     3,1%
-S5 HRP                                        79,9%            12,6%                17,1%   0,60    0,79          -42,7%   0,30                  25,1%     1,2%
+                                   loi_suat_tich_luy loi_suat_nam_hoa do_bien_dong_nam_hoa sharpe sortino sut_giam_toi_da calmar vong_quay_hai_chieu_bq tong_phi
+S1 VN-Index                                    56,1%             9,4%                19,9%   0,40    0,53          -40,3%   0,23                                
+S2 1/N                                         83,7%            13,1%                22,7%   0,52    0,68          -53,6%   0,24                  14,5%     0,8%
+S3 Markowitz                                   51,7%             8,8%                13,2%   0,48    0,65          -29,0%   0,30                  27,6%     1,2%
+S4 K-Means + Markowitz                        137,6%            19,2%                21,7%   0,78    1,09          -56,4%   0,34                 143,4%     5,7%
+S4đc Top-8 Sharpe (không gom cụm)              39,9%             7,0%                19,9%   0,29    0,39          -57,6%   0,12                  77,5%     3,1%
+S4tq Tương quan (Ward) + Markowitz            109,5%            16,2%                21,5%   0,66    0,92          -47,7%   0,34                 105,2%     4,2%
+S5 HRP                                         79,9%            12,6%                17,1%   0,60    0,79          -42,7%   0,30                  25,1%     1,2%
 Ghi chú: vòng quay hai chiều bình quân không tính lần mua đầu tiên; S1 không tính phí; VN-Index là chỉ số giá, các chiến lược còn lại dùng giá đã điều chỉnh (gồm cổ tức).
 
 Lợi suất theo năm:
-          S1      S2      S3      S4    S4đc      S5
-nam                                                 
-2021   31,1%   82,7%   59,2%  141,5%   84,4%   69,1%
-2022  -32,8%  -40,8%  -24,4%  -49,2%  -54,9%  -32,5%
-2023   12,2%   26,9%    7,5%    6,5%    5,0%   18,1%
-2024   12,1%    7,7%   12,1%   42,8%   25,5%   14,2%
-2025   40,9%   24,2%    4,5%   27,3%   27,8%   16,9%
+          S1      S2      S3      S4    S4đc    S4tq      S5
+nam                                                         
+2021   31,1%   82,7%   59,2%  141,5%   84,4%  105,3%   69,1%
+2022  -32,8%  -40,8%  -24,4%  -49,2%  -54,9%  -37,2%  -32,5%
+2023   12,2%   26,9%    7,5%    6,5%    5,0%    3,7%   18,1%
+2024   12,1%    7,7%   12,1%   42,8%   25,5%   19,5%   14,2%
+2025   40,9%   24,2%    4,5%   27,3%   27,8%   31,1%   16,9%
 
 Giai đoạn con (lợi suất năm hóa | Sharpe | sụt giảm tối đa):
-  Kỳ 1–4 (06/01/2021–07/01/2022, VN-Index 33,7%): S1 33,7% | 1,39 | -14,3%; S2 93,2% | 2,89 | -14,6%; S3 62,1% | 2,82 | -10,8%; S4 153,1% | 3,83 | -13,8%; S4đc 81,0% | 2,76 | -10,5%; S5 76,2% | 2,98 | -10,7%
-  Kỳ 5–8 (10/01/2022–11/01/2023, VN-Index -30,9%): S1 -30,9% | -1,50 | -40,2%; S2 -41,6% | -1,72 | -53,6%; S3 -23,0% | -1,91 | -29,0%; S4 -50,5% | -2,93 | -52,7%; S4đc -52,6% | -2,82 | -54,1%; S5 -32,8% | -1,78 | -42,7%
-  Kỳ 9–20 (12/01/2023–31/12/2025, VN-Index 69,0%): S1 19,6% | 0,94 | -18,1%; S2 18,1% | 0,81 | -21,9%; S3 6,9% | 0,38 | -12,4%; S4 24,4% | 1,07 | -14,6%; S4đc 18,2% | 0,93 | -21,3%; S5 15,3% | 0,88 | -15,1%
+  Kỳ 1–4 (06/01/2021–07/01/2022, VN-Index 33,7%): S1 33,7% | 1,39 | -14,3%; S2 93,2% | 2,89 | -14,6%; S3 62,1% | 2,82 | -10,8%; S4 153,1% | 3,83 | -13,8%; S4đc 81,0% | 2,76 | -10,5%; S4tq 115,5% | 3,28 | -11,8%; S5 76,2% | 2,98 | -10,7%
+  Kỳ 5–8 (10/01/2022–11/01/2023, VN-Index -30,9%): S1 -30,9% | -1,50 | -40,2%; S2 -41,6% | -1,72 | -53,6%; S3 -23,0% | -1,91 | -29,0%; S4 -50,5% | -2,93 | -52,7%; S4đc -52,6% | -2,82 | -54,1%; S4tq -40,7% | -1,80 | -46,3%; S5 -32,8% | -1,78 | -42,7%
+  Kỳ 9–20 (12/01/2023–31/12/2025, VN-Index 69,0%): S1 19,6% | 0,94 | -18,1%; S2 18,1% | 0,81 | -21,9%; S3 6,9% | 0,38 | -12,4%; S4 24,4% | 1,07 | -14,6%; S4đc 18,2% | 0,93 | -21,3%; S4tq 18,3% | 0,88 | -21,1%; S5 15,3% | 0,88 | -15,1%
 
 === PHẦN 4. KIỂM ĐỊNH CHÊNH LỆCH SHARPE (Ledoit & Wolf, 2008, HAC Bartlett, 7 độ trễ) ===
 Cả giai đoạn; chênh lệch = Sharpe(a) − Sharpe(b), năm hóa:
@@ -61,4 +67,10 @@ Cả giai đoạn; chênh lệch = Sharpe(a) − Sharpe(b), năm hóa:
   S5 − S3: 0,13 (sai số chuẩn 0,25), p = 0,603 
   S3 − S2: -0,05 (sai số chuẩn 0,33), p = 0,883 
   S4đc − S2: -0,24 (sai số chuẩn 0,38), p = 0,537 
-Ghi chú: ** p < 0,05; * p < 0,10. Kết quả theo giai đoạn con nằm trong kiem_dinh_sharpe.csv. Giai đoạn con ngắn (kỳ 1–4 và 5–8 chỉ khoảng 250 phiên) nên kiểm định ở đó có độ mạnh thấp.
+  S4 − S4tq: 0,11 (sai số chuẩn 0,37), p = 0,758 
+  S4tq − S4đc: 0,37 (sai số chuẩn 0,30), p = 0,209 
+  S4tq − S5: 0,06 (sai số chuẩn 0,31), p = 0,846 
+  S4tq − S1: 0,26 (sai số chuẩn 0,29), p = 0,364 
+  S4tq − S2: 0,14 (sai số chuẩn 0,34), p = 0,678 
+  S4tq − S3: 0,19 (sai số chuẩn 0,36), p = 0,601 
+Ghi chú: ** p < 0,05; * p < 0,10. Kết quả theo giai đoạn con nằm trong kiem_dinh_sharpe.csv. Giai đoạn con ngắn (kỳ 1–4 và 5–8 chỉ khoảng 250 phiên) nên kiểm định ở đó có độ mạnh thấp. Bản chính có 19 cặp kiểm định: không đọc một p nhỏ lẻ như bằng chứng.

@@ -7,7 +7,8 @@ Mọi quy ước đã chốt nằm ở đây để hai script dùng giống hệ
   - điều kiện chọn mã ở mỗi kỳ: thiếu không quá 10% cửa sổ, còn giao dịch trên HOSE sau ngày quyết định
     (quy tắc B về mã hủy niêm yết, chốt 13/11/2026), có giá ở ngày quyết định (thêm 16/11/2026);
   - bốn đặc trưng: lợi suất năm hóa, độ biến động năm hóa, beta với VN-Index, sụt giảm tối đa;
-  - hai trục cho K-Means (chốt 16/11/2026): lợi suất và chỉ số rủi ro tổng hợp.
+  - hai trục cho K-Means (chốt 16/11/2026): lợi suất và chỉ số rủi ro tổng hợp;
+  - gom cụm theo tương quan (liên kết Ward) dùng chung cho S4tq ở 06 và 07 (thêm 22/11/2026).
 """
 import os
 from pathlib import Path
@@ -233,6 +234,21 @@ def hrp(S, C):
     for m in thu_tu:
         kq[m] = w[vi_tri[m]]
     return kq / kq.sum()
+
+
+def nhom_tuong_quan(r_cp, k, ma, so_nhom, cua_so=CUA_SO):
+    """Gom cụm phân cấp theo tương quan, cùng cách với 05_gom_cum.py: tương quan lợi suất trong cửa sổ (một cặp mã
+    cần ít nhất 80% số phiên chung, thiếu thì coi tương quan bằng 0), khoảng cách sqrt(0,5(1 - rho)), liên kết Ward,
+    cắt cây thành so_nhom nhóm. Dùng cho S4tq (thêm 22/11/2026)."""
+    from scipy.cluster.hierarchy import fcluster, linkage
+    from scipy.spatial.distance import squareform
+    C = r_cp.iloc[k - cua_so:k][ma].corr(min_periods=int(cua_so * (1 - 2 * NGUONG_THIEU)))
+    c = C.fillna(0).to_numpy(copy=True)
+    np.fill_diagonal(c, 1.0)
+    kc = np.sqrt(np.clip(0.5 * (1 - c), 0, None))
+    np.fill_diagonal(kc, 0)
+    Z = linkage(squareform(kc, checks=False), method="ward")
+    return pd.Series(fcluster(Z, t=so_nhom, criterion="maxclust"), index=list(ma), name="nhom")
 
 
 def sharpe_cua_so(rr, rf_cs):

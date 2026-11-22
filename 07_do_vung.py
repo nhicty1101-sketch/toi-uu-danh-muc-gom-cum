@@ -3,15 +3,18 @@
 BƯỚC 6 – KIỂM ĐỊNH ĐỘ VỮNG
 Tiểu luận: Tối ưu hóa danh mục đầu tư bằng gom cụm và học máy (HOSE, 2019–2025)
 
-Chạy lại sáu chiến lược của 06_kiem_tra_ngoai_mau.py (S1 VN-Index, S2 1/N, S3 Markowitz, S4 K-Means + Markowitz,
-S4đc đối chứng không gom cụm, S5 HRP) dưới các giả định khác, mỗi lần đổi đúng một yếu tố so với bản chính:
+Chạy lại bảy chiến lược của 06_kiem_tra_ngoai_mau.py (S1 VN-Index, S2 1/N, S3 Markowitz, S4 K-Means + Markowitz,
+S4đc đối chứng không gom cụm, S4tq gom theo tương quan cùng quy tắc với S4, S5 HRP) dưới các giả định khác, mỗi lần
+đổi đúng một yếu tố so với bản chính:
   A. Chi phí và dữ liệu (cùng giai đoạn bản chính 06/01/2021–31/12/2025):
      rf = 0; phí 0% và 0,4% mỗi chiều; vị thế 5 mã bị đình chỉ rồi hủy niêm yết mất trắng.
   B. Độ dài cửa sổ ước lượng 252 / 504 / 756 phiên, CÙNG giao dịch từ phiên thứ 757 (10/01/2022) để so sánh sạch
      (người dùng chọn 16/11/2026); bản 504 phiên ở đây chính là kỳ 5–20 của bản chính.
   C. Tần suất tái cân bằng: mỗi 21 phiên (tháng), 63 phiên (bản chính), 126 phiên (nửa năm).
-  D. Cách ước lượng và chọn mã: hiệp phương sai co Ledoit–Wolf; K-Means bốn đặc trưng; S4 và S4đc chỉ chọn mã
-     có Sharpe > 0; loại khỏi rổ các mã có trên 15% số phiên giá đứng yên trong cửa sổ.
+  D. Cách ước lượng và chọn mã: hiệp phương sai co Ledoit–Wolf; K-Means bốn đặc trưng; S4, S4đc và S4tq chỉ chọn
+     mã có Sharpe > 0; loại khỏi rổ các mã có trên 15% số phiên giá đứng yên trong cửa sổ.
+  E. Trần tỷ trọng (thêm 22/11/2026): S3 với trần 5% và 20% (bản chính 10%); S4, S4đc, S4tq với trần 15% và 35%
+     (bản chính 25%).
 Kèm theo: bảng đóng góp lợi suất theo mã của S4 và S4đc từng năm (bản chính).
 
 Số cụm k giữ như bản chính (đọc từ ket_qua/gom_cum/chon_k_ky_1.csv). Bản chính chạy lại ở đây phải khớp 06.
@@ -32,8 +35,8 @@ import matplotlib.pyplot as plt
 
 from cong_cu import (BUOC, CUA_SO, GOC, PHI_GIAO_DICH, PHIEN_NAM, RAW, SO_MA_MOI_CUM, TRAN_S3, TRAN_S4,
                      bon_dac_trung, chi_tieu, doc_gia, doc_ngay_cuoi_hose, doc_rf, doc_ro, du_dieu_kien, hai_truc,
-                     hrp, kiem_dinh_sharpe, kmeans_co_thu_tu, loi_suat, mo_phong, phuong_sai_nho_nhat,
-                     sharpe_cua_so, tinh_dac_trung)
+                     hrp, kiem_dinh_sharpe, kmeans_co_thu_tu, loi_suat, mo_phong, nhom_tuong_quan,
+                     phuong_sai_nho_nhat, sharpe_cua_so, tinh_dac_trung)
 
 KQ = GOC / "ket_qua" / "do_vung"
 KQ.mkdir(parents=True, exist_ok=True)
@@ -41,11 +44,14 @@ K_MIN, K_MAX = 3, 8
 NGUONG_DUNG_GIA = 0.15
 BAT_DAU_CHUNG = 756          # phiên giao dịch đầu tiên khi so độ dài cửa sổ (cửa sổ dài nhất 756 phiên)
 CHIEN_LUOC = {"S1": "S1 VN-Index", "S2": "S2 1/N", "S3": "S3 Markowitz", "S4": "S4 K-Means + Markowitz",
-              "S4dc": "S4đc Top-8 Sharpe (không gom cụm)", "S5": "S5 HRP"}
-DS_CL = ["S2", "S3", "S4", "S4dc", "S5"]          # các chiến lược có danh mục (S1 là chỉ số)
-CAP_SO_SANH = [("S4", "S1"), ("S4", "S2"), ("S4", "S4dc"), ("S5", "S2"), ("S3", "S2")]
-MAU = {"S1": "#7F7F7F", "S2": "#4C78A8", "S3": "#F58518", "S4": "#54A24B", "S4dc": "#B279A2", "S5": "#E45756"}
-DAU = {"S1": "s", "S2": "o", "S3": "D", "S4": "*", "S4dc": "P", "S5": "^"}
+              "S4dc": "S4đc Top-8 Sharpe (không gom cụm)", "S4tq": "S4tq Tương quan (Ward) + Markowitz",
+              "S5": "S5 HRP"}
+DS_CL = ["S2", "S3", "S4", "S4dc", "S4tq", "S5"]  # các chiến lược có danh mục (S1 là chỉ số)
+CAP_SO_SANH = [("S4", "S1"), ("S4", "S2"), ("S4", "S4dc"), ("S4", "S4tq"), ("S4tq", "S4dc"), ("S5", "S2"),
+               ("S3", "S2")]
+MAU = {"S1": "#7F7F7F", "S2": "#4C78A8", "S3": "#F58518", "S4": "#54A24B", "S4dc": "#B279A2", "S4tq": "#1B9E9E",
+       "S5": "#E45756"}
+DAU = {"S1": "s", "S2": "o", "S3": "D", "S4": "*", "S4dc": "P", "S4tq": "X", "S5": "^"}
 
 BAO_CAO = []
 
@@ -82,6 +88,8 @@ class CauHinh:
     dac_trung: str = "hai_truc"      # "hai_truc" hoặc "bon"
     sharpe_duong: bool = False
     loc_dung_gia: bool = False
+    tran_s3: float = TRAN_S3
+    tran_s4: float = TRAN_S4         # dùng chung cho S4, S4đc, S4tq
 
 
 BAN_CHINH = CauHinh("ban_chinh", "Bản chính (cửa sổ 504, mỗi 63 phiên, phí 0,2%)", "A")
@@ -99,13 +107,18 @@ BIEN_THE = [
     CauHinh("nua_nam", "Tái cân bằng mỗi 126 phiên", "C", buoc=126),
     CauHinh("ledoit_wolf", "Hiệp phương sai co Ledoit–Wolf", "D", hiep_phuong_sai="ledoit_wolf"),
     CauHinh("kmeans4", "K-Means bốn đặc trưng", "D", dac_trung="bon"),
-    CauHinh("sharpe_duong", "S4, S4đc chỉ chọn mã Sharpe > 0", "D", sharpe_duong=True),
+    CauHinh("sharpe_duong", "S4, S4đc, S4tq chỉ chọn mã Sharpe > 0", "D", sharpe_duong=True),
     CauHinh("loc_dung_gia", "Loại mã đứng giá > 15% số phiên", "D", loc_dung_gia=True),
+    CauHinh("tran_s3_5", "Trần S3 5% (bản chính 10%)", "E", tran_s3=0.05),
+    CauHinh("tran_s3_20", "Trần S3 20%", "E", tran_s3=0.20),
+    CauHinh("tran_s4_15", "Trần S4, S4đc, S4tq 15% (bản chính 25%)", "E", tran_s4=0.15),
+    CauHinh("tran_s4_35", "Trần S4, S4đc, S4tq 35%", "E", tran_s4=0.35),
 ]
 TEN_NHOM = {"A": "A. Chi phí và dữ liệu (06/01/2021–31/12/2025)",
             "B": "B. Độ dài cửa sổ (cùng giai đoạn từ phiên thứ 757)",
             "C": "C. Tần suất tái cân bằng (06/01/2021–31/12/2025)",
-            "D": "D. Cách ước lượng và chọn mã (06/01/2021–31/12/2025)"}
+            "D": "D. Cách ước lượng và chọn mã (06/01/2021–31/12/2025)",
+            "E": "E. Trần tỷ trọng (06/01/2021–31/12/2025)"}
 
 plt.rcParams.update({"figure.dpi": 110, "savefig.dpi": 200, "font.size": 9,
                      "axes.spines.top": False, "axes.spines.right": False})
@@ -148,7 +161,8 @@ NHO = {}
 
 
 def ty_trong_ky(ch, k):
-    khoa = (ch.cua_so, ch.rf0, ch.hiep_phuong_sai, ch.dac_trung, ch.sharpe_duong, ch.loc_dung_gia, k)
+    khoa = (ch.cua_so, ch.rf0, ch.hiep_phuong_sai, ch.dac_trung, ch.sharpe_duong, ch.loc_dung_gia, ch.tran_s3,
+            ch.tran_s4, k)
     if khoa in NHO:
         return NHO[khoa]
     cs = ch.cua_so
@@ -170,7 +184,7 @@ def ty_trong_ky(ch, k):
         C = rr0.corr().values
 
     w = {"S2": pd.Series(1.0 / len(ma), index=ma),
-         "S3": pd.Series(phuong_sai_nho_nhat(S, TRAN_S3), index=ma),
+         "S3": pd.Series(phuong_sai_nho_nhat(S, ch.tran_s3), index=ma),
          "S5": pd.Series(hrp(S, C), index=ma)}
     dt = tinh_dac_trung(r_cp, r_vni, gia_ff_cp, k, ma, cs)
     if ch.dac_trung == "bon":
@@ -184,14 +198,19 @@ def ty_trong_ky(ch, k):
         nhom = [m for m in nhan.index[nhan == cu] if m in ung_vien.index]
         chon += list(ung_vien[nhom].sort_values(ascending=False).head(SO_MA_MOI_CUM).index)
     chon_dc = list(ung_vien.sort_values(ascending=False).head(len(chon)).index)
+    nhom_tq = nhom_tuong_quan(r_cp, k, ma, K, cs)
+    chon_tq = []
+    for g in sorted(nhom_tq.unique()):
+        nhom = [m for m in nhom_tq.index[nhom_tq == g] if m in ung_vien.index]
+        chon_tq += list(ung_vien[nhom].sort_values(ascending=False).head(SO_MA_MOI_CUM).index)
 
     def toi_uu(ds):
         if not ds:
             return pd.Series(dtype=float)       # không có mã nào đạt: giữ tiền mặt, lợi suất 0
         idx = [ma.index(m) for m in ds]
-        return pd.Series(phuong_sai_nho_nhat(S[np.ix_(idx, idx)], TRAN_S4), index=ds)
+        return pd.Series(phuong_sai_nho_nhat(S[np.ix_(idx, idx)], ch.tran_s4), index=ds)
 
-    w["S4"], w["S4dc"] = toi_uu(chon), toi_uu(chon_dc)
+    w["S4"], w["S4dc"], w["S4tq"] = toi_uu(chon), toi_uu(chon_dc), toi_uu(chon_tq)
     NHO[khoa] = (w, chon, len(ma))
     return NHO[khoa]
 
@@ -290,10 +309,21 @@ _, vq_hien = bang_rong("vong_quay_hai_chieu_bq", pt)
 in_theo_nhom("Vòng quay hai chiều bình quân mỗi kỳ:", vq_hien.drop(columns="S1"))
 sharpe.to_csv(KQ / "sharpe_theo_bien_the.csv", encoding="utf-8-sig", float_format="%.4f")
 
-ghi("\nThứ hạng Sharpe của S4 trong 6 chiến lược, và chiến lược có Sharpe cao nhất:")
+ghi(f"\nThứ hạng Sharpe của S4 và S4tq trong {sharpe.shape[1]} chiến lược, và chiến lược có Sharpe cao nhất:")
 for ch in BIEN_THE:
     hang = sharpe.loc[ch.ten].rank(ascending=False)
-    ghi(f"    {ch.mo_ta:48s} S4 hạng {hang['S4']:.0f}/6; cao nhất: {sharpe.loc[ch.ten].idxmax()}")
+    ghi(f"    {ch.mo_ta:48s} S4 hạng {hang['S4']:.0f}/{sharpe.shape[1]}; S4tq hạng {hang['S4tq']:.0f}; "
+        f"cao nhất: {sharpe.loc[ch.ten].idxmax()}")
+khac = [ch.ten for ch in BIEN_THE if ch.ten != "quy"]     # "quy" trùng bản chính, không đếm hai lần
+for a, b in [("S4", "S4tq"), ("S4", "S4đc"), ("S4tq", "S4đc"), ("S4", "S5"), ("S4tq", "S5")]:
+    hon = [t for t in khac if sharpe.at[t, a] > sharpe.at[t, b]]
+    if 0 < len(hon) <= len(khac) / 2:
+        them = "; ở các cấu hình: " + ", ".join(hon)
+    elif len(khac) / 2 < len(hon) < len(khac):
+        them = "; ngoại lệ: " + ", ".join(t for t in khac if t not in hon)
+    else:
+        them = ""
+    ghi(f"  Sharpe {a} > {b}: {len(hon)}/{len(khac)} cấu hình{them}")
 
 ghi("\nKiểm định chênh lệch Sharpe (Ledoit & Wolf, 2008, HAC): chênh lệch năm hóa (p-value); ** p < 0,05; * p < 0,10")
 for nhom, ten_nhom in TEN_NHOM.items():
@@ -350,7 +380,7 @@ ghi("Ghi chú: đóng góp = lãi/lỗ của mã trong năm chia cho giá trị 
 
 
 # %% 7. Hình
-fig, ax = plt.subplots(figsize=(7.5, 6.2))
+fig, ax = plt.subplots(figsize=(7.5, 7.4))
 nhan_y, y, vi_tri = [], 0, {}
 for nhom in TEN_NHOM:
     ds = [ch for ch in BIEN_THE if ch.nhom == nhom]

@@ -1,5 +1,5 @@
 Đọc giá từ MySQL (bảng gia_ngay): 1747 phiên
-1747 phiên, 100 mã, k = 4; 15 cấu hình
+1747 phiên, 100 mã, k = 4; 19 cấu hình
 Giai đoạn so độ dài cửa sổ: giao dịch từ 10/01/2022
   Mất trắng ROS: giao dịch cuối 11/08/2022, ghi lỗ 100% ở phiên 12/08/2022
   Mất trắng FLC: giao dịch cuối 08/09/2022, ghi lỗ 100% ở phiên 09/09/2022
@@ -18,131 +18,165 @@ Tái cân bằng mỗi 126 phiên: 10 kỳ, 06/01/2021–31/12/2025
 
 Sharpe:
   A. Chi phí và dữ liệu (06/01/2021–31/12/2025)
-    Bản chính (cửa sổ 504, mỗi 63 phiên, phí 0,2%)   S1    0,40  S2    0,52  S3    0,48  S4    0,78  S4đc    0,29  S5    0,60
-    rf = 0                                           S1    0,55  S2    0,66  S3    0,70  S4    1,27  S4đc    0,50  S5    0,78
-    Phí 0%                                           S1    0,40  S2    0,53  S3    0,50  S4    0,83  S4đc    0,32  S5    0,62
-    Phí 0,4% mỗi chiều                               S1    0,40  S2    0,52  S3    0,46  S4    0,72  S4đc    0,26  S5    0,59
-    Mất trắng 5 mã bị đình chỉ                       S1    0,40  S2    0,49  S3    0,43  S4    0,74  S4đc    0,29  S5    0,57
+    Bản chính (cửa sổ 504, mỗi 63 phiên, phí 0,2%)   S1    0,40  S2    0,52  S3    0,48  S4    0,78  S4đc    0,29  S4tq    0,66  S5    0,60
+    rf = 0                                           S1    0,55  S2    0,66  S3    0,70  S4    1,27  S4đc    0,50  S4tq    0,74  S5    0,78
+    Phí 0%                                           S1    0,40  S2    0,53  S3    0,50  S4    0,83  S4đc    0,32  S4tq    0,70  S5    0,62
+    Phí 0,4% mỗi chiều                               S1    0,40  S2    0,52  S3    0,46  S4    0,72  S4đc    0,26  S4tq    0,62  S5    0,59
+    Mất trắng 5 mã bị đình chỉ                       S1    0,40  S2    0,49  S3    0,43  S4    0,74  S4đc    0,29  S4tq    0,66  S5    0,57
   B. Độ dài cửa sổ (cùng giai đoạn từ phiên thứ 757)
-    Cửa sổ 252 phiên                                 S1    0,16  S2   -0,07  S3   -0,06  S4    0,17  S4đc    0,20  S5    0,04
-    Cửa sổ 504 phiên (= kỳ 5–20 bản chính)           S1    0,16  S2   -0,07  S3   -0,33  S4   -0,11  S4đc   -0,39  S5   -0,06
-    Cửa sổ 756 phiên                                 S1    0,16  S2   -0,07  S3   -0,36  S4    0,42  S4đc   -0,16  S5   -0,13
+    Cửa sổ 252 phiên                                 S1    0,16  S2   -0,07  S3   -0,06  S4    0,17  S4đc    0,20  S4tq    0,25  S5    0,04
+    Cửa sổ 504 phiên (= kỳ 5–20 bản chính)           S1    0,16  S2   -0,07  S3   -0,33  S4   -0,11  S4đc   -0,39  S4tq   -0,08  S5   -0,06
+    Cửa sổ 756 phiên                                 S1    0,16  S2   -0,07  S3   -0,36  S4    0,42  S4đc   -0,16  S4tq   -0,26  S5   -0,13
   C. Tần suất tái cân bằng (06/01/2021–31/12/2025)
-    Tái cân bằng mỗi 21 phiên                        S1    0,40  S2    0,50  S3    0,45  S4    0,89  S4đc    0,44  S5    0,60
-    Tái cân bằng mỗi 63 phiên (bản chính)            S1    0,40  S2    0,52  S3    0,48  S4    0,78  S4đc    0,29  S5    0,60
-    Tái cân bằng mỗi 126 phiên                       S1    0,40  S2    0,58  S3    0,56  S4    0,86  S4đc    0,48  S5    0,66
+    Tái cân bằng mỗi 21 phiên                        S1    0,40  S2    0,50  S3    0,45  S4    0,89  S4đc    0,44  S4tq    0,64  S5    0,60
+    Tái cân bằng mỗi 63 phiên (bản chính)            S1    0,40  S2    0,52  S3    0,48  S4    0,78  S4đc    0,29  S4tq    0,66  S5    0,60
+    Tái cân bằng mỗi 126 phiên                       S1    0,40  S2    0,58  S3    0,56  S4    0,86  S4đc    0,48  S4tq    0,30  S5    0,66
   D. Cách ước lượng và chọn mã (06/01/2021–31/12/2025)
-    Hiệp phương sai co Ledoit–Wolf                   S1    0,40  S2    0,52  S3    0,49  S4    0,78  S4đc    0,29  S5    0,60
-    K-Means bốn đặc trưng                            S1    0,40  S2    0,52  S3    0,48  S4    0,56  S4đc    0,29  S5    0,60
-    S4, S4đc chỉ chọn mã Sharpe > 0                  S1    0,40  S2    0,52  S3    0,48  S4    0,65  S4đc    0,43  S5    0,60
-    Loại mã đứng giá > 15% số phiên                  S1    0,40  S2    0,52  S3    0,41  S4    0,86  S4đc    0,32  S5    0,64
+    Hiệp phương sai co Ledoit–Wolf                   S1    0,40  S2    0,52  S3    0,49  S4    0,78  S4đc    0,29  S4tq    0,66  S5    0,60
+    K-Means bốn đặc trưng                            S1    0,40  S2    0,52  S3    0,48  S4    0,56  S4đc    0,29  S4tq    0,66  S5    0,60
+    S4, S4đc, S4tq chỉ chọn mã Sharpe > 0            S1    0,40  S2    0,52  S3    0,48  S4    0,65  S4đc    0,43  S4tq    0,66  S5    0,60
+    Loại mã đứng giá > 15% số phiên                  S1    0,40  S2    0,52  S3    0,41  S4    0,86  S4đc    0,32  S4tq    0,33  S5    0,64
+  E. Trần tỷ trọng (06/01/2021–31/12/2025)
+    Trần S3 5% (bản chính 10%)                       S1    0,40  S2    0,52  S3    0,52  S4    0,78  S4đc    0,29  S4tq    0,66  S5    0,60
+    Trần S3 20%                                      S1    0,40  S2    0,52  S3    0,63  S4    0,78  S4đc    0,29  S4tq    0,66  S5    0,60
+    Trần S4, S4đc, S4tq 15% (bản chính 25%)          S1    0,40  S2    0,52  S3    0,48  S4    0,78  S4đc    0,32  S4tq    0,58  S5    0,60
+    Trần S4, S4đc, S4tq 35%                          S1    0,40  S2    0,52  S3    0,48  S4    0,85  S4đc    0,31  S4tq    0,64  S5    0,60
 
 Lợi suất năm hóa:
   A. Chi phí và dữ liệu (06/01/2021–31/12/2025)
-    Bản chính (cửa sổ 504, mỗi 63 phiên, phí 0,2%)   S1    9,4%  S2   13,1%  S3    8,8%  S4   19,2%  S4đc    7,0%  S5   12,6%
-    rf = 0                                           S1    9,4%  S2   13,1%  S3    8,8%  S4   28,5%  S4đc    8,2%  S5   12,6%
-    Phí 0%                                           S1    9,4%  S2   13,3%  S3    9,1%  S4   20,6%  S4đc    7,7%  S5   12,9%
-    Phí 0,4% mỗi chiều                               S1    9,4%  S2   12,9%  S3    8,5%  S4   17,8%  S4đc    6,4%  S5   12,4%
-    Mất trắng 5 mã bị đình chỉ                       S1    9,4%  S2   12,2%  S3    8,1%  S4   18,1%  S4đc    7,0%  S5   12,0%
+    Bản chính (cửa sổ 504, mỗi 63 phiên, phí 0,2%)   S1    9,4%  S2   13,1%  S3    8,8%  S4   19,2%  S4đc    7,0%  S4tq   16,2%  S5   12,6%
+    rf = 0                                           S1    9,4%  S2   13,1%  S3    8,8%  S4   28,5%  S4đc    8,2%  S4tq   14,4%  S5   12,6%
+    Phí 0%                                           S1    9,4%  S2   13,3%  S3    9,1%  S4   20,6%  S4đc    7,7%  S4tq   17,2%  S5   12,9%
+    Phí 0,4% mỗi chiều                               S1    9,4%  S2   12,9%  S3    8,5%  S4   17,8%  S4đc    6,4%  S4tq   15,2%  S5   12,4%
+    Mất trắng 5 mã bị đình chỉ                       S1    9,4%  S2   12,2%  S3    8,1%  S4   18,1%  S4đc    7,0%  S4tq   16,2%  S5   12,0%
   B. Độ dài cửa sổ (cùng giai đoạn từ phiên thứ 757)
-    Cửa sổ 252 phiên                                 S1    4,4%  S2   -1,0%  S3    1,7%  S4    4,8%  S4đc    5,3%  S5    2,6%
-    Cửa sổ 504 phiên (= kỳ 5–20 bản chính)           S1    4,4%  S2   -0,9%  S3   -1,4%  S4   -1,3%  S4đc   -6,1%  S5    0,9%
-    Cửa sổ 756 phiên                                 S1    4,4%  S2   -0,9%  S3   -2,1%  S4    9,6%  S4đc   -1,3%  S5   -0,4%
+    Cửa sổ 252 phiên                                 S1    4,4%  S2   -1,0%  S3    1,7%  S4    4,8%  S4đc    5,3%  S4tq    6,4%  S5    2,6%
+    Cửa sổ 504 phiên (= kỳ 5–20 bản chính)           S1    4,4%  S2   -0,9%  S3   -1,4%  S4   -1,3%  S4đc   -6,1%  S4tq   -0,7%  S5    0,9%
+    Cửa sổ 756 phiên                                 S1    4,4%  S2   -0,9%  S3   -2,1%  S4    9,6%  S4đc   -1,3%  S4tq   -4,0%  S5   -0,4%
   C. Tần suất tái cân bằng (06/01/2021–31/12/2025)
-    Tái cân bằng mỗi 21 phiên                        S1    9,4%  S2   12,5%  S3    8,3%  S4   21,6%  S4đc   10,3%  S5   12,6%
-    Tái cân bằng mỗi 63 phiên (bản chính)            S1    9,4%  S2   13,1%  S3    8,8%  S4   19,2%  S4đc    7,0%  S5   12,6%
-    Tái cân bằng mỗi 126 phiên                       S1    9,4%  S2   14,3%  S3   10,2%  S4   21,2%  S4đc   11,2%  S5   13,7%
+    Tái cân bằng mỗi 21 phiên                        S1    9,4%  S2   12,5%  S3    8,3%  S4   21,6%  S4đc   10,3%  S4tq   15,6%  S5   12,6%
+    Tái cân bằng mỗi 63 phiên (bản chính)            S1    9,4%  S2   13,1%  S3    8,8%  S4   19,2%  S4đc    7,0%  S4tq   16,2%  S5   12,6%
+    Tái cân bằng mỗi 126 phiên                       S1    9,4%  S2   14,3%  S3   10,2%  S4   21,2%  S4đc   11,2%  S4tq    7,6%  S5   13,7%
   D. Cách ước lượng và chọn mã (06/01/2021–31/12/2025)
-    Hiệp phương sai co Ledoit–Wolf                   S1    9,4%  S2   13,1%  S3    9,0%  S4   19,3%  S4đc    7,0%  S5   12,7%
-    K-Means bốn đặc trưng                            S1    9,4%  S2   13,1%  S3    8,8%  S4   13,3%  S4đc    7,0%  S5   12,6%
-    S4, S4đc chỉ chọn mã Sharpe > 0                  S1    9,4%  S2   13,1%  S3    8,8%  S4   16,1%  S4đc   10,3%  S5   12,6%
-    Loại mã đứng giá > 15% số phiên                  S1    9,4%  S2   13,2%  S3    8,2%  S4   22,0%  S4đc    7,8%  S5   13,8%
+    Hiệp phương sai co Ledoit–Wolf                   S1    9,4%  S2   13,1%  S3    9,0%  S4   19,3%  S4đc    7,0%  S4tq   16,1%  S5   12,7%
+    K-Means bốn đặc trưng                            S1    9,4%  S2   13,1%  S3    8,8%  S4   13,3%  S4đc    7,0%  S4tq   16,2%  S5   12,6%
+    S4, S4đc, S4tq chỉ chọn mã Sharpe > 0            S1    9,4%  S2   13,1%  S3    8,8%  S4   16,1%  S4đc   10,3%  S4tq   16,2%  S5   12,6%
+    Loại mã đứng giá > 15% số phiên                  S1    9,4%  S2   13,2%  S3    8,2%  S4   22,0%  S4đc    7,8%  S4tq    8,1%  S5   13,8%
+  E. Trần tỷ trọng (06/01/2021–31/12/2025)
+    Trần S3 5% (bản chính 10%)                       S1    9,4%  S2   13,1%  S3    9,8%  S4   19,2%  S4đc    7,0%  S4tq   16,2%  S5   12,6%
+    Trần S3 20%                                      S1    9,4%  S2   13,1%  S3   11,1%  S4   19,2%  S4đc    7,0%  S4tq   16,2%  S5   12,6%
+    Trần S4, S4đc, S4tq 15% (bản chính 25%)          S1    9,4%  S2   13,1%  S3    8,8%  S4   20,5%  S4đc    8,0%  S4tq   14,9%  S5   12,6%
+    Trần S4, S4đc, S4tq 35%                          S1    9,4%  S2   13,1%  S3    8,8%  S4   20,6%  S4đc    7,4%  S4tq   15,2%  S5   12,6%
 
 Sụt giảm tối đa:
   A. Chi phí và dữ liệu (06/01/2021–31/12/2025)
-    Bản chính (cửa sổ 504, mỗi 63 phiên, phí 0,2%)   S1  -40,3%  S2  -53,6%  S3  -29,0%  S4  -56,4%  S4đc  -57,6%  S5  -42,7%
-    rf = 0                                           S1  -40,3%  S2  -53,6%  S3  -29,0%  S4  -46,7%  S4đc  -57,6%  S5  -42,7%
-    Phí 0%                                           S1  -40,3%  S2  -53,6%  S3  -28,9%  S4  -55,9%  S4đc  -57,2%  S5  -42,6%
-    Phí 0,4% mỗi chiều                               S1  -40,3%  S2  -53,7%  S3  -29,1%  S4  -57,2%  S4đc  -57,9%  S5  -42,7%
-    Mất trắng 5 mã bị đình chỉ                       S1  -40,3%  S2  -54,4%  S3  -29,0%  S4  -56,4%  S4đc  -57,6%  S5  -43,0%
+    Bản chính (cửa sổ 504, mỗi 63 phiên, phí 0,2%)   S1  -40,3%  S2  -53,6%  S3  -29,0%  S4  -56,4%  S4đc  -57,6%  S4tq  -47,7%  S5  -42,7%
+    rf = 0                                           S1  -40,3%  S2  -53,6%  S3  -29,0%  S4  -46,7%  S4đc  -57,6%  S4tq  -48,3%  S5  -42,7%
+    Phí 0%                                           S1  -40,3%  S2  -53,6%  S3  -28,9%  S4  -55,9%  S4đc  -57,2%  S4tq  -46,8%  S5  -42,6%
+    Phí 0,4% mỗi chiều                               S1  -40,3%  S2  -53,7%  S3  -29,1%  S4  -57,2%  S4đc  -57,9%  S4tq  -48,5%  S5  -42,7%
+    Mất trắng 5 mã bị đình chỉ                       S1  -40,3%  S2  -54,4%  S3  -29,0%  S4  -56,4%  S4đc  -57,6%  S4tq  -47,7%  S5  -43,0%
   B. Độ dài cửa sổ (cùng giai đoạn từ phiên thứ 757)
-    Cửa sổ 252 phiên                                 S1  -40,2%  S2  -53,7%  S3  -34,1%  S4  -27,6%  S4đc  -50,2%  S5  -41,6%
-    Cửa sổ 504 phiên (= kỳ 5–20 bản chính)           S1  -40,2%  S2  -53,6%  S3  -29,0%  S4  -56,4%  S4đc  -55,4%  S5  -42,7%
-    Cửa sổ 756 phiên                                 S1  -40,2%  S2  -53,6%  S3  -37,1%  S4  -30,2%  S4đc  -53,5%  S5  -44,1%
+    Cửa sổ 252 phiên                                 S1  -40,2%  S2  -53,7%  S3  -34,1%  S4  -27,6%  S4đc  -50,2%  S4tq  -41,6%  S5  -41,6%
+    Cửa sổ 504 phiên (= kỳ 5–20 bản chính)           S1  -40,2%  S2  -53,6%  S3  -29,0%  S4  -56,4%  S4đc  -55,4%  S4tq  -47,7%  S5  -42,7%
+    Cửa sổ 756 phiên                                 S1  -40,2%  S2  -53,6%  S3  -37,1%  S4  -30,2%  S4đc  -53,5%  S4tq  -54,4%  S5  -44,1%
   C. Tần suất tái cân bằng (06/01/2021–31/12/2025)
-    Tái cân bằng mỗi 21 phiên                        S1  -40,3%  S2  -53,8%  S3  -31,3%  S4  -45,6%  S4đc  -50,9%  S5  -42,5%
-    Tái cân bằng mỗi 63 phiên (bản chính)            S1  -40,3%  S2  -53,6%  S3  -29,0%  S4  -56,4%  S4đc  -57,6%  S5  -42,7%
-    Tái cân bằng mỗi 126 phiên                       S1  -40,3%  S2  -51,9%  S3  -30,8%  S4  -37,3%  S4đc  -55,9%  S5  -42,0%
+    Tái cân bằng mỗi 21 phiên                        S1  -40,3%  S2  -53,8%  S3  -31,3%  S4  -45,6%  S4đc  -50,9%  S4tq  -51,7%  S5  -42,5%
+    Tái cân bằng mỗi 63 phiên (bản chính)            S1  -40,3%  S2  -53,6%  S3  -29,0%  S4  -56,4%  S4đc  -57,6%  S4tq  -47,7%  S5  -42,7%
+    Tái cân bằng mỗi 126 phiên                       S1  -40,3%  S2  -51,9%  S3  -30,8%  S4  -37,3%  S4đc  -55,9%  S4tq  -60,6%  S5  -42,0%
   D. Cách ước lượng và chọn mã (06/01/2021–31/12/2025)
-    Hiệp phương sai co Ledoit–Wolf                   S1  -40,3%  S2  -53,6%  S3  -28,9%  S4  -56,3%  S4đc  -57,7%  S5  -42,8%
-    K-Means bốn đặc trưng                            S1  -40,3%  S2  -53,6%  S3  -29,0%  S4  -57,0%  S4đc  -57,6%  S5  -42,7%
-    S4, S4đc chỉ chọn mã Sharpe > 0                  S1  -40,3%  S2  -53,6%  S3  -29,0%  S4  -56,0%  S4đc  -59,2%  S5  -42,7%
-    Loại mã đứng giá > 15% số phiên                  S1  -40,3%  S2  -54,3%  S3  -28,4%  S4  -45,2%  S4đc  -57,6%  S5  -42,7%
+    Hiệp phương sai co Ledoit–Wolf                   S1  -40,3%  S2  -53,6%  S3  -28,9%  S4  -56,3%  S4đc  -57,7%  S4tq  -47,8%  S5  -42,8%
+    K-Means bốn đặc trưng                            S1  -40,3%  S2  -53,6%  S3  -29,0%  S4  -57,0%  S4đc  -57,6%  S4tq  -47,7%  S5  -42,7%
+    S4, S4đc, S4tq chỉ chọn mã Sharpe > 0            S1  -40,3%  S2  -53,6%  S3  -29,0%  S4  -56,0%  S4đc  -59,2%  S4tq  -47,7%  S5  -42,7%
+    Loại mã đứng giá > 15% số phiên                  S1  -40,3%  S2  -54,3%  S3  -28,4%  S4  -45,2%  S4đc  -57,6%  S4tq  -54,7%  S5  -42,7%
+  E. Trần tỷ trọng (06/01/2021–31/12/2025)
+    Trần S3 5% (bản chính 10%)                       S1  -40,3%  S2  -53,6%  S3  -31,5%  S4  -56,4%  S4đc  -57,6%  S4tq  -47,7%  S5  -42,7%
+    Trần S3 20%                                      S1  -40,3%  S2  -53,6%  S3  -27,9%  S4  -56,4%  S4đc  -57,6%  S4tq  -47,7%  S5  -42,7%
+    Trần S4, S4đc, S4tq 15% (bản chính 25%)          S1  -40,3%  S2  -53,6%  S3  -29,0%  S4  -53,1%  S4đc  -60,3%  S4tq  -52,8%  S5  -42,7%
+    Trần S4, S4đc, S4tq 35%                          S1  -40,3%  S2  -53,6%  S3  -29,0%  S4  -51,7%  S4đc  -54,6%  S4tq  -45,4%  S5  -42,7%
 
 Vòng quay hai chiều bình quân mỗi kỳ:
   A. Chi phí và dữ liệu (06/01/2021–31/12/2025)
-    Bản chính (cửa sổ 504, mỗi 63 phiên, phí 0,2%)   S2   14,5%  S3   27,6%  S4  143,4%  S4đc   77,5%  S5   25,1%
-    rf = 0                                           S2   14,5%  S3   27,6%  S4  141,2%  S4đc   77,4%  S5   25,1%
-    Phí 0%                                           S2   14,5%  S3   27,6%  S4  143,4%  S4đc   77,5%  S5   25,1%
-    Phí 0,4% mỗi chiều                               S2   14,5%  S3   27,6%  S4  143,4%  S4đc   77,5%  S5   25,1%
-    Mất trắng 5 mã bị đình chỉ                       S2   14,3%  S3   27,5%  S4  143,3%  S4đc   77,5%  S5   25,0%
+    Bản chính (cửa sổ 504, mỗi 63 phiên, phí 0,2%)   S2   14,5%  S3   27,6%  S4  143,4%  S4đc   77,5%  S4tq  105,2%  S5   25,1%
+    rf = 0                                           S2   14,5%  S3   27,6%  S4  141,2%  S4đc   77,4%  S4tq  105,7%  S5   25,1%
+    Phí 0%                                           S2   14,5%  S3   27,6%  S4  143,4%  S4đc   77,5%  S4tq  105,2%  S5   25,1%
+    Phí 0,4% mỗi chiều                               S2   14,5%  S3   27,6%  S4  143,4%  S4đc   77,5%  S4tq  105,2%  S5   25,1%
+    Mất trắng 5 mã bị đình chỉ                       S2   14,3%  S3   27,5%  S4  143,3%  S4đc   77,5%  S4tq  105,2%  S5   25,0%
   B. Độ dài cửa sổ (cùng giai đoạn từ phiên thứ 757)
-    Cửa sổ 252 phiên                                 S2   13,1%  S3   46,1%  S4  155,4%  S4đc  121,4%  S5   32,3%
-    Cửa sổ 504 phiên (= kỳ 5–20 bản chính)           S2   13,1%  S3   26,7%  S4  145,2%  S4đc   82,5%  S5   23,5%
-    Cửa sổ 756 phiên                                 S2   13,1%  S3   22,2%  S4  101,5%  S4đc   72,8%  S5   21,4%
+    Cửa sổ 252 phiên                                 S2   13,1%  S3   46,1%  S4  155,4%  S4đc  121,4%  S4tq  134,7%  S5   32,3%
+    Cửa sổ 504 phiên (= kỳ 5–20 bản chính)           S2   13,1%  S3   26,7%  S4  145,2%  S4đc   82,5%  S4tq  107,3%  S5   23,5%
+    Cửa sổ 756 phiên                                 S2   13,1%  S3   22,2%  S4  101,5%  S4đc   72,8%  S4tq   97,6%  S5   21,4%
   C. Tần suất tái cân bằng (06/01/2021–31/12/2025)
-    Tái cân bằng mỗi 21 phiên                        S2    7,9%  S3   14,3%  S4  116,2%  S4đc   59,1%  S5   18,1%
-    Tái cân bằng mỗi 63 phiên (bản chính)            S2   14,5%  S3   27,6%  S4  143,4%  S4đc   77,5%  S5   25,1%
-    Tái cân bằng mỗi 126 phiên                       S2   22,7%  S3   45,5%  S4  151,0%  S4đc  108,2%  S5   34,8%
+    Tái cân bằng mỗi 21 phiên                        S2    7,9%  S3   14,3%  S4  116,2%  S4đc   59,1%  S4tq   80,3%  S5   18,1%
+    Tái cân bằng mỗi 63 phiên (bản chính)            S2   14,5%  S3   27,6%  S4  143,4%  S4đc   77,5%  S4tq  105,2%  S5   25,1%
+    Tái cân bằng mỗi 126 phiên                       S2   22,7%  S3   45,5%  S4  151,0%  S4đc  108,2%  S4tq  117,5%  S5   34,8%
   D. Cách ước lượng và chọn mã (06/01/2021–31/12/2025)
-    Hiệp phương sai co Ledoit–Wolf                   S2   14,5%  S3   27,5%  S4  143,5%  S4đc   77,2%  S5   25,0%
-    K-Means bốn đặc trưng                            S2   14,5%  S3   27,6%  S4  125,0%  S4đc   77,5%  S5   25,1%
-    S4, S4đc chỉ chọn mã Sharpe > 0                  S2   14,5%  S3   27,6%  S4  136,9%  S4đc   84,8%  S5   25,1%
-    Loại mã đứng giá > 15% số phiên                  S2   15,9%  S3   31,7%  S4  143,7%  S4đc   78,4%  S5   28,3%
+    Hiệp phương sai co Ledoit–Wolf                   S2   14,5%  S3   27,5%  S4  143,5%  S4đc   77,2%  S4tq  105,0%  S5   25,0%
+    K-Means bốn đặc trưng                            S2   14,5%  S3   27,6%  S4  125,0%  S4đc   77,5%  S4tq  105,2%  S5   25,1%
+    S4, S4đc, S4tq chỉ chọn mã Sharpe > 0            S2   14,5%  S3   27,6%  S4  136,9%  S4đc   84,8%  S4tq  105,2%  S5   25,1%
+    Loại mã đứng giá > 15% số phiên                  S2   15,9%  S3   31,7%  S4  143,7%  S4đc   78,4%  S4tq  111,4%  S5   28,3%
+  E. Trần tỷ trọng (06/01/2021–31/12/2025)
+    Trần S3 5% (bản chính 10%)                       S2   14,5%  S3   24,5%  S4  143,4%  S4đc   77,5%  S4tq  105,2%  S5   25,1%
+    Trần S3 20%                                      S2   14,5%  S3   30,9%  S4  143,4%  S4đc   77,5%  S4tq  105,2%  S5   25,1%
+    Trần S4, S4đc, S4tq 15% (bản chính 25%)          S2   14,5%  S3   27,6%  S4  144,4%  S4đc   79,8%  S4tq  101,5%  S5   25,1%
+    Trần S4, S4đc, S4tq 35%                          S2   14,5%  S3   27,6%  S4  141,7%  S4đc   79,4%  S4tq  107,5%  S5   25,1%
 
-Thứ hạng Sharpe của S4 trong 6 chiến lược, và chiến lược có Sharpe cao nhất:
-    Bản chính (cửa sổ 504, mỗi 63 phiên, phí 0,2%)   S4 hạng 1/6; cao nhất: S4
-    rf = 0                                           S4 hạng 1/6; cao nhất: S4
-    Phí 0%                                           S4 hạng 1/6; cao nhất: S4
-    Phí 0,4% mỗi chiều                               S4 hạng 1/6; cao nhất: S4
-    Mất trắng 5 mã bị đình chỉ                       S4 hạng 1/6; cao nhất: S4
-    Cửa sổ 252 phiên                                 S4 hạng 2/6; cao nhất: S4đc
-    Cửa sổ 504 phiên (= kỳ 5–20 bản chính)           S4 hạng 4/6; cao nhất: S1
-    Cửa sổ 756 phiên                                 S4 hạng 1/6; cao nhất: S4
-    Tái cân bằng mỗi 21 phiên                        S4 hạng 1/6; cao nhất: S4
-    Tái cân bằng mỗi 63 phiên (bản chính)            S4 hạng 1/6; cao nhất: S4
-    Tái cân bằng mỗi 126 phiên                       S4 hạng 1/6; cao nhất: S4
-    Hiệp phương sai co Ledoit–Wolf                   S4 hạng 1/6; cao nhất: S4
-    K-Means bốn đặc trưng                            S4 hạng 2/6; cao nhất: S5
-    S4, S4đc chỉ chọn mã Sharpe > 0                  S4 hạng 1/6; cao nhất: S4
-    Loại mã đứng giá > 15% số phiên                  S4 hạng 1/6; cao nhất: S4
+Thứ hạng Sharpe của S4 và S4tq trong 7 chiến lược, và chiến lược có Sharpe cao nhất:
+    Bản chính (cửa sổ 504, mỗi 63 phiên, phí 0,2%)   S4 hạng 1/7; S4tq hạng 2; cao nhất: S4
+    rf = 0                                           S4 hạng 1/7; S4tq hạng 3; cao nhất: S4
+    Phí 0%                                           S4 hạng 1/7; S4tq hạng 2; cao nhất: S4
+    Phí 0,4% mỗi chiều                               S4 hạng 1/7; S4tq hạng 2; cao nhất: S4
+    Mất trắng 5 mã bị đình chỉ                       S4 hạng 1/7; S4tq hạng 2; cao nhất: S4
+    Cửa sổ 252 phiên                                 S4 hạng 3/7; S4tq hạng 1; cao nhất: S4tq
+    Cửa sổ 504 phiên (= kỳ 5–20 bản chính)           S4 hạng 5/7; S4tq hạng 4; cao nhất: S1
+    Cửa sổ 756 phiên                                 S4 hạng 1/7; S4tq hạng 6; cao nhất: S4
+    Tái cân bằng mỗi 21 phiên                        S4 hạng 1/7; S4tq hạng 2; cao nhất: S4
+    Tái cân bằng mỗi 63 phiên (bản chính)            S4 hạng 1/7; S4tq hạng 2; cao nhất: S4
+    Tái cân bằng mỗi 126 phiên                       S4 hạng 1/7; S4tq hạng 7; cao nhất: S4
+    Hiệp phương sai co Ledoit–Wolf                   S4 hạng 1/7; S4tq hạng 2; cao nhất: S4
+    K-Means bốn đặc trưng                            S4 hạng 3/7; S4tq hạng 1; cao nhất: S4tq
+    S4, S4đc, S4tq chỉ chọn mã Sharpe > 0            S4 hạng 2/7; S4tq hạng 1; cao nhất: S4tq
+    Loại mã đứng giá > 15% số phiên                  S4 hạng 1/7; S4tq hạng 6; cao nhất: S4
+    Trần S3 5% (bản chính 10%)                       S4 hạng 1/7; S4tq hạng 2; cao nhất: S4
+    Trần S3 20%                                      S4 hạng 1/7; S4tq hạng 2; cao nhất: S4
+    Trần S4, S4đc, S4tq 15% (bản chính 25%)          S4 hạng 1/7; S4tq hạng 3; cao nhất: S4
+    Trần S4, S4đc, S4tq 35%                          S4 hạng 1/7; S4tq hạng 2; cao nhất: S4
+  Sharpe S4 > S4tq: 14/18 cấu hình; ngoại lệ: cs252, cs504, kmeans4, sharpe_duong
+  Sharpe S4 > S4đc: 17/18 cấu hình; ngoại lệ: cs252
+  Sharpe S4tq > S4đc: 16/18 cấu hình; ngoại lệ: cs756, nua_nam
+  Sharpe S4 > S5: 16/18 cấu hình; ngoại lệ: cs504, kmeans4
+  Sharpe S4tq > S5: 12/18 cấu hình; ngoại lệ: rf0, cs504, cs756, nua_nam, loc_dung_gia, tran_s4_15
 
 Kiểm định chênh lệch Sharpe (Ledoit & Wolf, 2008, HAC): chênh lệch năm hóa (p-value); ** p < 0,05; * p < 0,10
   A. Chi phí và dữ liệu (06/01/2021–31/12/2025)
-    Bản chính (cửa sổ 504, mỗi 63 phiên, phí 0,2%)   S4 − S1 0,38 (0,32); S4 − S2 0,25 (0,54); S4 − S4đc 0,49 (0,15); S5 − S2 0,08 (0,45); S3 − S2 -0,05 (0,88)
-    rf = 0                                           S4 − S1 0,72 (0,04)**; S4 − S2 0,61 (0,12); S4 − S4đc 0,78 (0,03)**; S5 − S2 0,12 (0,24); S3 − S2 0,05 (0,89)
-    Phí 0%                                           S4 − S1 0,43 (0,25); S4 − S2 0,30 (0,46); S4 − S4đc 0,51 (0,14); S5 − S2 0,09 (0,41); S3 − S2 -0,04 (0,91)
-    Phí 0,4% mỗi chiều                               S4 − S1 0,32 (0,39); S4 − S2 0,21 (0,61); S4 − S4đc 0,47 (0,17); S5 − S2 0,07 (0,49); S3 − S2 -0,06 (0,85)
-    Mất trắng 5 mã bị đình chỉ                       S4 − S1 0,33 (0,38); S4 − S2 0,25 (0,55); S4 − S4đc 0,45 (0,20); S5 − S2 0,08 (0,43); S3 − S2 -0,06 (0,85)
+    Bản chính (cửa sổ 504, mỗi 63 phiên, phí 0,2%)   S4 − S1 0,38 (0,32); S4 − S2 0,25 (0,54); S4 − S4đc 0,49 (0,15); S4 − S4tq 0,11 (0,76); S4tq − S4đc 0,37 (0,21); S5 − S2 0,08 (0,45); S3 − S2 -0,05 (0,88)
+    rf = 0                                           S4 − S1 0,72 (0,04)**; S4 − S2 0,61 (0,12); S4 − S4đc 0,78 (0,03)**; S4 − S4tq 0,53 (0,13); S4tq − S4đc 0,24 (0,43); S5 − S2 0,12 (0,24); S3 − S2 0,05 (0,89)
+    Phí 0%                                           S4 − S1 0,43 (0,25); S4 − S2 0,30 (0,46); S4 − S4đc 0,51 (0,14); S4 − S4tq 0,13 (0,73); S4tq − S4đc 0,38 (0,20); S5 − S2 0,09 (0,41); S3 − S2 -0,04 (0,91)
+    Phí 0,4% mỗi chiều                               S4 − S1 0,32 (0,39); S4 − S2 0,21 (0,61); S4 − S4đc 0,47 (0,17); S4 − S4tq 0,10 (0,79); S4tq − S4đc 0,37 (0,22); S5 − S2 0,07 (0,49); S3 − S2 -0,06 (0,85)
+    Mất trắng 5 mã bị đình chỉ                       S4 − S1 0,33 (0,38); S4 − S2 0,25 (0,55); S4 − S4đc 0,45 (0,20); S4 − S4tq 0,07 (0,85); S4tq − S4đc 0,37 (0,21); S5 − S2 0,08 (0,43); S3 − S2 -0,06 (0,85)
   B. Độ dài cửa sổ (cùng giai đoạn từ phiên thứ 757)
-    Cửa sổ 252 phiên                                 S4 − S1 0,01 (0,97); S4 − S2 0,24 (0,49); S4 − S4đc -0,03 (0,95); S5 − S2 0,12 (0,40); S3 − S2 0,01 (0,97)
-    Cửa sổ 504 phiên (= kỳ 5–20 bản chính)           S4 − S1 -0,27 (0,50); S4 − S2 -0,04 (0,92); S4 − S4đc 0,28 (0,39); S5 − S2 0,01 (0,93); S3 − S2 -0,26 (0,46)
-    Cửa sổ 756 phiên                                 S4 − S1 0,27 (0,46); S4 − S2 0,49 (0,20); S4 − S4đc 0,58 (0,11); S5 − S2 -0,06 (0,59); S3 − S2 -0,29 (0,45)
+    Cửa sổ 252 phiên                                 S4 − S1 0,01 (0,97); S4 − S2 0,24 (0,49); S4 − S4đc -0,03 (0,95); S4 − S4tq -0,08 (0,83); S4tq − S4đc 0,05 (0,87); S5 − S2 0,12 (0,40); S3 − S2 0,01 (0,97)
+    Cửa sổ 504 phiên (= kỳ 5–20 bản chính)           S4 − S1 -0,27 (0,50); S4 − S2 -0,04 (0,92); S4 − S4đc 0,28 (0,39); S4 − S4tq -0,03 (0,94); S4tq − S4đc 0,31 (0,31); S5 − S2 0,01 (0,93); S3 − S2 -0,26 (0,46)
+    Cửa sổ 756 phiên                                 S4 − S1 0,27 (0,46); S4 − S2 0,49 (0,20); S4 − S4đc 0,58 (0,11); S4 − S4tq 0,68 (0,05)**; S4tq − S4đc -0,11 (0,69); S5 − S2 -0,06 (0,59); S3 − S2 -0,29 (0,45)
   C. Tần suất tái cân bằng (06/01/2021–31/12/2025)
-    Tái cân bằng mỗi 21 phiên                        S4 − S1 0,49 (0,13); S4 − S2 0,39 (0,27); S4 − S4đc 0,45 (0,16); S5 − S2 0,11 (0,32); S3 − S2 -0,05 (0,88)
-    Tái cân bằng mỗi 63 phiên (bản chính)            S4 − S1 0,38 (0,32); S4 − S2 0,25 (0,54); S4 − S4đc 0,49 (0,15); S5 − S2 0,08 (0,45); S3 − S2 -0,05 (0,88)
-    Tái cân bằng mỗi 126 phiên                       S4 − S1 0,46 (0,15); S4 − S2 0,28 (0,42); S4 − S4đc 0,38 (0,24); S5 − S2 0,08 (0,45); S3 − S2 -0,01 (0,97)
+    Tái cân bằng mỗi 21 phiên                        S4 − S1 0,49 (0,13); S4 − S2 0,39 (0,27); S4 − S4đc 0,45 (0,16); S4 − S4tq 0,24 (0,45); S4tq − S4đc 0,21 (0,45); S5 − S2 0,11 (0,32); S3 − S2 -0,05 (0,88)
+    Tái cân bằng mỗi 63 phiên (bản chính)            S4 − S1 0,38 (0,32); S4 − S2 0,25 (0,54); S4 − S4đc 0,49 (0,15); S4 − S4tq 0,11 (0,76); S4tq − S4đc 0,37 (0,21); S5 − S2 0,08 (0,45); S3 − S2 -0,05 (0,88)
+    Tái cân bằng mỗi 126 phiên                       S4 − S1 0,46 (0,15); S4 − S2 0,28 (0,42); S4 − S4đc 0,38 (0,24); S4 − S4tq 0,55 (0,08)*; S4tq − S4đc -0,18 (0,39); S5 − S2 0,08 (0,45); S3 − S2 -0,01 (0,97)
   D. Cách ước lượng và chọn mã (06/01/2021–31/12/2025)
-    Hiệp phương sai co Ledoit–Wolf                   S4 − S1 0,38 (0,31); S4 − S2 0,26 (0,53); S4 − S4đc 0,49 (0,15); S5 − S2 0,08 (0,44); S3 − S2 -0,04 (0,91)
-    K-Means bốn đặc trưng                            S4 − S1 0,16 (0,68); S4 − S2 0,03 (0,93); S4 − S4đc 0,27 (0,33); S5 − S2 0,08 (0,45); S3 − S2 -0,05 (0,88)
-    S4, S4đc chỉ chọn mã Sharpe > 0                  S4 − S1 0,25 (0,50); S4 − S2 0,12 (0,76); S4 − S4đc 0,22 (0,50); S5 − S2 0,08 (0,45); S3 − S2 -0,05 (0,88)
-    Loại mã đứng giá > 15% số phiên                  S4 − S1 0,45 (0,15); S4 − S2 0,33 (0,34); S4 − S4đc 0,53 (0,10)*; S5 − S2 0,11 (0,22); S3 − S2 -0,11 (0,71)
+    Hiệp phương sai co Ledoit–Wolf                   S4 − S1 0,38 (0,31); S4 − S2 0,26 (0,53); S4 − S4đc 0,49 (0,15); S4 − S4tq 0,12 (0,74); S4tq − S4đc 0,37 (0,21); S5 − S2 0,08 (0,44); S3 − S2 -0,04 (0,91)
+    K-Means bốn đặc trưng                            S4 − S1 0,16 (0,68); S4 − S2 0,03 (0,93); S4 − S4đc 0,27 (0,33); S4 − S4tq -0,11 (0,75); S4tq − S4đc 0,37 (0,21); S5 − S2 0,08 (0,45); S3 − S2 -0,05 (0,88)
+    S4, S4đc, S4tq chỉ chọn mã Sharpe > 0            S4 − S1 0,25 (0,50); S4 − S2 0,12 (0,76); S4 − S4đc 0,22 (0,50); S4 − S4tq -0,02 (0,96); S4tq − S4đc 0,23 (0,45); S5 − S2 0,08 (0,45); S3 − S2 -0,05 (0,88)
+    Loại mã đứng giá > 15% số phiên                  S4 − S1 0,45 (0,15); S4 − S2 0,33 (0,34); S4 − S4đc 0,53 (0,10)*; S4 − S4tq 0,53 (0,14); S4tq − S4đc 0,01 (0,98); S5 − S2 0,11 (0,22); S3 − S2 -0,11 (0,71)
+  E. Trần tỷ trọng (06/01/2021–31/12/2025)
+    Trần S3 5% (bản chính 10%)                       S4 − S1 0,38 (0,32); S4 − S2 0,25 (0,54); S4 − S4đc 0,49 (0,15); S4 − S4tq 0,11 (0,76); S4tq − S4đc 0,37 (0,21); S5 − S2 0,08 (0,45); S3 − S2 -0,01 (0,98)
+    Trần S3 20%                                      S4 − S1 0,38 (0,32); S4 − S2 0,25 (0,54); S4 − S4đc 0,49 (0,15); S4 − S4tq 0,11 (0,76); S4tq − S4đc 0,37 (0,21); S5 − S2 0,08 (0,45); S3 − S2 0,10 (0,78)
+    Trần S4, S4đc, S4tq 15% (bản chính 25%)          S4 − S1 0,38 (0,20); S4 − S2 0,26 (0,40); S4 − S4đc 0,46 (0,15); S4 − S4tq 0,20 (0,51); S4tq − S4đc 0,26 (0,30); S5 − S2 0,08 (0,45); S3 − S2 -0,05 (0,88)
+    Trần S4, S4đc, S4tq 35%                          S4 − S1 0,45 (0,23); S4 − S2 0,33 (0,43); S4 − S4đc 0,54 (0,11); S4 − S4tq 0,21 (0,58); S4tq − S4đc 0,33 (0,26); S5 − S2 0,08 (0,45); S3 − S2 -0,05 (0,88)
 
 === GHI CHÚ RIÊNG ===
 rf = 0: số mã S4 đổi so với bản chính: tổng 9 lượt trên 20 kỳ, 7 kỳ có đổi (tối đa 2 mã/kỳ)
 Sharpe > 0: S4 giữ 4–8 mã (trung vị 8); 0 kỳ không có mã nào đạt (giữ tiền mặt)
 Loại mã đứng giá: rổ còn 83–96 mã mỗi kỳ (bản chính 88–100)
-Mất trắng: lợi suất tích lũy bản chính → mất trắng: S2 83,7% → 76,5%; S3 51,7% → 47,1%; S4 137,6% → 127,6%; S4đc 39,9% → 39,9%; S5 79,9% → 75,2%
+Mất trắng: lợi suất tích lũy bản chính → mất trắng: S2 83,7% → 76,5%; S3 51,7% → 47,1%; S4 137,6% → 127,6%; S4đc 39,9% → 39,9%; S4tq 109,5% → 109,5%; S5 79,9% → 75,2%
 
 === ĐÓNG GÓP LỢI SUẤT THEO MÃ (bản chính) ===
   S4 2021: lợi suất 141,5%; 3 mã đóng góp lớn nhất PDR 30,6%, VPI 30,1%, GEX 17,1%; mã kéo lùi nhiều nhất HPX -4,6%; bỏ mã đóng góp lớn nhất còn 110,9%
